@@ -10,5 +10,6 @@ return [
     //characters.
     'fromId' => env('FRONT_FROM_ID', null),
 
-    'notifiable_phone_key' => env('FRONT_NOTIFIABLE_KEY', 'phone')
+    'notifiablePhoneKey' => env('FRONT_NOTIFIABLE_KEY', 'phone'),
+    'defaultRegion' => null // ISO 3166-2 Geographic Region code (E.g. GB, NO, SE)
 ];

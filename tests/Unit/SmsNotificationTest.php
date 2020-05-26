@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use Illuminate\Support\Facades\Notification;
+use libphonenumber\NumberParseException;
 use RolfHaug\FrontSms\Notifications\SmsNotification;
 use Tests\Messages\DynamicMessage;
 use Tests\TestCase;
@@ -29,7 +30,7 @@ class SmsNotificationTest extends TestCase
             $sms = $notification->toSms($user);
             return $sms->message === 'This is a test message'
                 && $sms->user_id === $user->id
-                && $sms->to === $user->phone;
+                && $sms->to === $user->getFormattedPhone();
         });
     }
 
@@ -47,7 +48,7 @@ class SmsNotificationTest extends TestCase
         $sms = $notification->toSms($user);
 
         $this->assertEquals('My Sender', $sms->from);
-        $this->assertEquals($user->phone, $sms->to);
+        $this->assertEquals($user->getFormattedPhone(), $sms->to);
         $this->assertEquals('This is a test message', $sms->message);
         $this->assertEquals(0, $sms->price);
         $this->assertEquals($user->id, $sms->user_id);
@@ -83,7 +84,7 @@ class SmsNotificationTest extends TestCase
         $notification = new SmsNotification('Test message');
         $sms = $notification->toSms($user);
 
-        $this->assertEquals($user->phone, $sms->to);
+        $this->assertEquals($user->getFormattedPhone(), $sms->to);
     }
 
     /** @test */
@@ -91,10 +92,48 @@ class SmsNotificationTest extends TestCase
     {
         $user = $this->createUser();
 
-        $notification = (new SmsNotification('Test message'))->to('99887766');
+        $notification = (new SmsNotification('Test message'))->to('+4799887766');
         $sms = $notification->toSms($user);
 
-        $this->assertEquals('99887766', $sms->to);
+        $this->assertEquals('+4799887766', $sms->to);
+    }
+
+    /** @test */
+    public function it_throws_if_setting_to_field_through_method_and_it_does_not_have_country_code()
+    {
+        $this->expectException(NumberParseException::class);
+        (new SmsNotification('Test message'))->to('99887766');
+    }
+
+    /** @test */
+    public function it_gets_country_code_from_user_when_using_smsable_trait()
+    {
+        $user = $this->createUser(['country_code' => 'NO', 'phone' => 90012345]);
+
+        $notification = (new SmsNotification('Test message'));
+        $sms = $notification->toSms($user);
+
+        $this->assertEquals('+4790012345', $sms->to);
+    }
+
+    /** @test */
+    public function it_gets_country_code_from_config_when_no_user_or_country_code_is_given()
+    {
+        $this->app['config']->set('front-sms.defaultRegion', 'NO');
+        $notification = (new SmsNotification('Test message'))->to('90012345');
+
+        $this->assertEquals('+4790012345', $notification->to);
+    }
+
+    /** @test */
+    public function it_sets_to_field_from_user_through_method()
+    {
+        $user = $this->createUser();
+
+        $notification = (new SmsNotification('Test message'))->to($user);
+        $sms = $notification->toSms($user);
+
+        $this->assertEquals($user->getFormattedPhone(), $sms->to);
     }
 
     /** @test */

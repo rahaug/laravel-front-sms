@@ -13,6 +13,14 @@ An elegant API to send SMS notifications to your users.
 
 Your user model (or auth model) must have a phone field. The field key can be customized in the your env.
 
+**Country code**
+
+The package prevalidates receipients. All messages must have a known geographic region. This can be set three ways:
+
+1. By specifying ISO XYZ number. E.g. +4790012345
+2. By specifying a `country_code` field on the user model (database column or Eloquent accessor)
+3. Setting default region in the config file.
+
 ## Usage
 
 Predefined messages

@@ -18,7 +18,9 @@ class TestCase extends \Orchestra\Testbench\TestCase
 
         // Add phone to auth model
         include_once __DIR__.'/../database/migrations/add_phone_column_to_user.php.stub';
+        include_once __DIR__.'/../database/migrations/add_country_code_column_to_user.php.stub';
         (new \AddPhoneColumnToUserTable)->up();
+        (new \AddCountryCodeColumnToUser)->up();
     }
 
     public function getPackageProviders($app)
@@ -64,7 +66,8 @@ class TestCase extends \Orchestra\Testbench\TestCase
             'name' => $faker->name,
             'email' => $faker->email,
             'phone' => $faker->phoneNumber,
-            'password' => bcrypt('123456')
+            'password' => bcrypt('123456'),
+            'country_code' => $faker->countryCode
         ], $overrides));
     }
 }

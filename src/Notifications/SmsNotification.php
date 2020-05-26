@@ -4,12 +4,17 @@ namespace RolfHaug\FrontSms\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Validator;
+use libphonenumber\NumberParseException;
+use libphonenumber\PhoneNumberFormat;
+use libphonenumber\PhoneNumberUtil;
 use RolfHaug\FrontSms\Channels\SmsChannel;
 use RolfHaug\FrontSms\Contracts\Smsable;
 use RolfHaug\FrontSms\Exceptions\Front\InvalidMessageArgument;
 use RolfHaug\FrontSms\FrontMessage;
+use RolfHaug\FrontSms\Traits\Smsable as SmsableTrait;
 
 class SmsNotification extends Notification implements ShouldQueue, Smsable
 {
@@ -77,8 +82,7 @@ class SmsNotification extends Notification implements ShouldQueue, Smsable
     public function toSms($notifiable)
     {
         if (! $this->to) {
-            $key = config('front-sms.notifiable_phone_key');
-            $this->to($notifiable->$key);
+            $this->to($notifiable);
         }
 
         $userId = null;
@@ -152,14 +156,41 @@ class SmsNotification extends Notification implements ShouldQueue, Smsable
     }
 
     /**
-     * Set receipient of the message.
+     * Set recipient of the message.
      *
-     * @param $to
+     * @param $to Notifiable|SmsableTrait
      * @return $this
+     * @throws NumberParseException
      */
     public function to($to)
     {
-        $this->to = $to;
+        $phoneUtil = PhoneNumberUtil::getInstance();
+
+        $notifiable = null;
+
+        if (is_object($to)) {
+            $key = config('front-sms.notifiablePhoneKey');
+            $notifiable = $to;
+            $to = $notifiable->$key;
+        }
+
+        // Validate recipients number
+        try {
+            // Try and see if phone number includes country code (e.g. +4790012345)
+            $parser = $phoneUtil->parse($to);
+            $formatted = $phoneUtil->format($parser, PhoneNumberFormat::E164);
+        } catch (NumberParseException $e) {
+            // Check if we got the notifiable and it uses the SmsableTrait
+            if ($notifiable && in_array(SmsableTrait::class, class_uses($notifiable))) {
+                $formatted = $notifiable->getFormattedPhone();
+            } else {
+                // Fallback to config
+                $phone = $phoneUtil->parse($to, config('front-sms.defaultRegion'));
+                $formatted = $phoneUtil->format($phone, PhoneNumberFormat::E164);
+            }
+        }
+
+        $this->to = $formatted;
 
         return $this;
     }
