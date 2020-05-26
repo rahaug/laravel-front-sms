@@ -1,0 +1,38 @@
+{
+    "name": "rolfhaug/laravel-front-sms",
+    "description": "A Laravel package for sending SMS through Front SMS Gateway (fro.no)",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Rolf Haug",
+            "email": "rolf@rah.no"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "php": ">=7.0",
+        "guzzlehttp/guzzle": "~6.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^3.8",
+        "friendsofphp/php-cs-fixer": "^2.16"
+    },
+    "autoload": {
+        "psr-4": {
+            "RolfHaug\\FrontSms\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "RolfHaug\\FrontSms\\FrontSmsServiceProvider"
+            ]
+        }
+    }
+}
