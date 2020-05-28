@@ -25,7 +25,10 @@ class CreateFrontMessagesTable extends Migration
             $table->timestamp('delivered_at')->nullable();
             $table->timestamps();
 
-            $table->index(['user_id', 'origid']);
+            $table->index(['user_id', 'to', 'from']);
+            $table->index(['user_id', 'delivered_at']);
+            $table->index(['to']);
+            $table->index(['origid']);
         });
     }
 
