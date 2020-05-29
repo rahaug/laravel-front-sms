@@ -48,6 +48,13 @@ class SmsNotification extends Notification implements ShouldQueue, Smsable
     public $price = 0;
 
     /**
+     * The eloquent model of the created message.
+     *
+     * @var FrontMessage
+     */
+    public $model;
+
+    /**
      * Create a new message instance.
      *
      * @param string $message
@@ -55,7 +62,7 @@ class SmsNotification extends Notification implements ShouldQueue, Smsable
     public function __construct($message = null)
     {
         if (! $this->from) {
-            $this->from = config('front-sms.fromId');
+            $this->from = config('front-sms.fromId', null);
         }
 
         if (! $this->message && $message) {
@@ -86,7 +93,7 @@ class SmsNotification extends Notification implements ShouldQueue, Smsable
         }
 
         $userId = null;
-        $user = config('auth.model');
+        $user = config('auth.providers.users.model');
 
         if ($notifiable instanceof $user) {
             $userId = $notifiable->getAuthIdentifier();
@@ -111,7 +118,9 @@ class SmsNotification extends Notification implements ShouldQueue, Smsable
             throw new InvalidMessageArgument($validator->errors());
         }
 
-        return FrontMessage::create($data);
+        $this->model = FrontMessage::create($data);
+
+        return $this->model;
     }
 
     /**

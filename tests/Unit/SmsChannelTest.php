@@ -1,29 +1,19 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Unit;
 
 use Mockery as m;
 use RolfHaug\FrontSms\Channels\SmsChannel;
 use RolfHaug\FrontSms\FrontClient;
+use RolfHaug\FrontSms\FrontMessage;
 use RolfHaug\FrontSms\Notifications\SmsNotification;
 use Tests\TestCase;
 
 class SmsChannelTest extends TestCase
 {
-    public function setUp() : void
-    {
-        parent::setUp();
-
-        // Set SMS Sender name
-        $this->app->config->set('front-sms.fromId', 'Testsender');
-    }
-
     /** @test */
-    public function it_sends_sms()
+    public function it_sends_sms_and_sets_message_model()
     {
-        // Mock client
-        // Ref: https://github.com/laravel/nexmo-notification-channel/blob/2.0/tests/Channels/NexmoSmsChannelTest.php
-
         $notification = new SmsNotification('Test message');
         $notifiable = $this->createUser();
 
@@ -34,8 +24,15 @@ class SmsChannelTest extends TestCase
         $client->shouldReceive('push')
             ->once();
 
-        // Make sure origid is set to the message.
-
         $channel->send($notifiable, $notification);
+
+        $this->assertInstanceOf(FrontMessage::class, $channel->getMessageModel());
+    }
+
+    /** @test */
+    public function it_sets_get_message_model_as_null_by_default()
+    {
+        $channel = new SmsChannel();
+        $this->assertNull($channel->getMessageModel());
     }
 }

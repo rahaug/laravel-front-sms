@@ -4,20 +4,15 @@ namespace Tests\Unit;
 
 use Illuminate\Support\Facades\Notification;
 use libphonenumber\NumberParseException;
+use RolfHaug\FrontSms\FrontMessage;
 use RolfHaug\FrontSms\Notifications\SmsNotification;
+use Tests\Article;
 use Tests\Messages\DynamicMessage;
+use Tests\Messages\MultiDependencyMessage;
 use Tests\TestCase;
 
 class SmsNotificationTest extends TestCase
 {
-    public function setUp() : void
-    {
-        parent::setUp();
-
-        // Set SMS Sender name
-        $this->app->config->set('front-sms.fromId', 'Testsender');
-    }
-
     /** @test */
     public function it_can_send_sms_through_user()
     {
@@ -156,5 +151,30 @@ class SmsNotificationTest extends TestCase
         $sms = $notification->toSms($user);
 
         $this->assertEquals('Welcome Bruce Wayne!', $sms->message);
+    }
+
+    /** @test */
+    public function it_stores_eloquent_model_of_message_as_property()
+    {
+        $user = $this->createUser(['name' => 'Bruce Wayne']);
+
+        $notification = (new SmsNotification('Test message'));
+        $sms = $notification->toSms($user);
+        $this->assertInstanceOf(FrontMessage::class, $sms);
+    }
+
+    /** @test */
+    public function it_can_send_messages_with_multiple_dependencies()
+    {
+        $user = $this->createUser();
+        $article = (new Article)->fill(['title' => 'My article title', 'link' => 'https://website.com/blogg/my-article-title']);
+
+        $notification = (new MultiDependencyMessage(null, $article));
+        $sms = $notification->toSms($user);
+
+        $this->assertEquals(
+            "Hi {$user->name}, you have a new comment on your \"{$article->title}\" article. Read it here: {$article->link}",
+            $sms->message
+        );
     }
 }
