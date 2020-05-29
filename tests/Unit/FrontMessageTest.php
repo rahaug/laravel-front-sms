@@ -63,4 +63,35 @@ class FrontMessageTest extends TestCase
         $this->assertNotNull($sms->sent_at);
         $this->assertEquals(1234, $sms->origid);
     }
+
+    /** @test */
+    public function it_marks_lesson_as_delivered()
+    {
+        $sms = factory(FrontMessage::class)->create();
+
+        $this->assertFalse($sms->isDelivered());
+        $sms->markAsDelivered();
+
+        $this->assertTrue($sms->fresh()->isDelivered());
+    }
+
+    /** @test */
+    public function it_has_is_failed_helper()
+    {
+        $sms = factory(FrontMessage::class)->create();
+
+        $this->assertFalse($sms->isFailed());
+        $sms->update(['failed_at' => now()]);
+        $this->assertTrue($sms->fresh()->isFailed());
+    }
+
+    /** @test */
+    public function it_marks_lesson_as_failed()
+    {
+        $sms = factory(FrontMessage::class)->create();
+        $this->assertFalse($sms->isFailed());
+        $sms->markAsFailed();
+
+        $this->assertTrue($sms->fresh()->isFailed());
+    }
 }

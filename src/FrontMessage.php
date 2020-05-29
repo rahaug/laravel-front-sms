@@ -8,7 +8,7 @@ class FrontMessage extends Model
 {
     protected $guarded = [];
 
-    protected $dates = ['sent_at', 'delivered_at'];
+    protected $dates = ['sent_at', 'delivered_at', 'failed_at'];
 
     /**
      * Get related message statuses.
@@ -28,6 +28,16 @@ class FrontMessage extends Model
     public function isDelivered()
     {
         return $this->delivered_at && $this->delivered_at->isPast();
+    }
+
+    /**
+     * Checks if the message delivery failed. Returns true if delivery failure is confirmed.
+     *
+     * @return bool
+     */
+    public function isFailed()
+    {
+        return $this->failed_at && $this->failed_at->isPast();
     }
 
     /**
@@ -52,6 +62,30 @@ class FrontMessage extends Model
             'origid' => $origId,
             'sent_at' => now()
         ]);
+
+        return $this;
+    }
+
+    /**
+     * Mark message as delivered to recipient.
+     *
+     * @return $this
+     */
+    public function markAsDelivered()
+    {
+        $this->update(['delivered_at' => now()]);
+
+        return $this;
+    }
+
+    /**
+     * Mark message as failed to deliver to recipient.
+     *
+     * @return $this
+     */
+    public function markAsFailed()
+    {
+        $this->update(['failed_at' => now()]);
 
         return $this;
     }
