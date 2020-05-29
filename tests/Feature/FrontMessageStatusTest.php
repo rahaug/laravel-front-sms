@@ -39,4 +39,30 @@ class FrontMessageStatusTest extends TestCase
 
         $request->assertStatus(Response::HTTP_NOT_FOUND);
     }
+
+    /** @test */
+    public function it_marks_message_as_delivered()
+    {
+        $message = factory(FrontMessage::class)->create(['origid' => 1234]);
+
+        $this->post(route('sms.status.store'), [
+            'origid' => $message->origid,
+            'status' => FrontMessageStatus::RECEIVED_BY_RECIPIENT
+        ]);
+
+        $this->assertTrue($message->fresh()->isDelivered());
+    }
+
+    /** @test */
+    public function it_marks_message_as_failed()
+    {
+        $message = factory(FrontMessage::class)->create(['origid' => 1234]);
+
+        $this->post(route('sms.status.store'), [
+            'origid' => $message->origid,
+            'status' => FrontMessageStatus::DELIVERY_FAILED
+        ]);
+
+        $this->assertTrue($message->fresh()->isFailed());
+    }
 }

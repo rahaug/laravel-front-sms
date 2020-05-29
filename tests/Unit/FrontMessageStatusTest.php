@@ -33,9 +33,9 @@ class FrontMessageStatusTest extends TestCase
 
         $sms = factory(FrontMessage::class)->create(['origid' => $status->origid]);
 
-        $this->assertNotNull($status->sms);
-        $this->assertInstanceOf(FrontMessage::class, $status->sms);
-        $this->assertEquals($sms->id, $status->sms->id);
+        $this->assertNotNull($status->message);
+        $this->assertInstanceOf(FrontMessage::class, $status->message);
+        $this->assertEquals($sms->id, $status->message->id);
     }
 
     /** @test */

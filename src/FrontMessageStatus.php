@@ -19,7 +19,7 @@ class FrontMessageStatus extends Model
      * .
      * @return FrontMessage
      */
-    public function sms()
+    public function message()
     {
         return $this->belongsTo(FrontMessage::class, 'origid', 'origid');
     }

@@ -13,7 +13,15 @@ class FrontMessageStatusController extends Controller
 
     public function store(StoreFrontMessageStatus $request)
     {
-        FrontMessageStatus::create($request->validated());
+        /** @var FrontMessageStatus $status */
+        $status = FrontMessageStatus::create($request->validated());
+
+        if ($status->isDelivered()) {
+            $status->message->markAsDelivered();
+        } elseif ($status->isFailed()) {
+            $status->message->markAsFailed();
+        }
+
         return response()->json('OK');
     }
 }
