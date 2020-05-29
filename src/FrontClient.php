@@ -3,6 +3,7 @@
 namespace RolfHaug\FrontSms;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\RequestOptions;
 use RolfHaug\FrontSms\Exceptions\Front\InvalidApiRequest;
 
 class FrontClient
@@ -52,12 +53,15 @@ class FrontClient
     private function mapPayload(FrontMessage $message)
     {
         return [
-            'serviceid' => $this->serviceId,
-            'fromid' => $message->from,
-            'phoneno' => $message->to,
-            'txt' => $message->message,
-            'price' => $message->price,
-            'unicode' => $message->isUnicode()
+            RequestOptions::JSON => [
+                'serviceid' => (int) $this->serviceId,
+                'fromid' => $message->from,
+                'phoneno' => $message->to,
+                'txt' => $message->message,
+                'price' => $message->price,
+                'unicode' => $message->isUnicode(),
+                'password' => config('front-sms.password', null),
+            ]
         ];
     }
 
