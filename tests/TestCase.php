@@ -3,7 +3,6 @@
 namespace Tests;
 
 use Faker\Factory;
-use Illuminate\Contracts\Debug\ExceptionHandler;
 use RolfHaug\FrontSms\FrontSmsServiceProvider;
 
 class TestCase extends \Orchestra\Testbench\TestCase
@@ -39,9 +38,13 @@ class TestCase extends \Orchestra\Testbench\TestCase
             'database' => ':memory:',
             'prefix' => '',
         ]);
-        $app['config']->set('app.debug', true);
+
+        // Bind user model
         $app['config']->set('auth.providers.users.model', User::class);
-        $app->bind(ExceptionHandler::class, ExceptionLogger::class);
+
+        // Package config
+        $app['config']->set('front-sms.serviceId', '1337');
+        $app['config']->set('front-sms.fromId', 'Testsender');
 
         // import the CreatePostsTable class from the migration
         include_once __DIR__.'/../database/migrations/create_front_messages_table.php.stub';
