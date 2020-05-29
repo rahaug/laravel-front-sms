@@ -23,10 +23,19 @@ class SmsableTraitTest extends TestCase
     }
 
     /** @test */
-    public function it_get_country_code_method_returrns_country_code_if_column_or_accessor_exists()
+    public function it_returns_country_code_if_column_or_accessor_exists()
     {
         $user = new User;
         $user->country_code = 'NO';
+        $this->assertEquals('NO', $user->getCountryCode());
+    }
+
+    /** @test */
+    public function it_returns_country_code_from_config_if_not_set_on_user()
+    {
+        $this->app['config']->set('front-sms.defaultRegion', 'NO');
+        $user = new User;
+        $this->assertNull($user->country_code);
         $this->assertEquals('NO', $user->getCountryCode());
     }
 

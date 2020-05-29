@@ -14,7 +14,7 @@ trait Smsable
      */
     public function getCountryCode()
     {
-        return $this->country_code ?? null;
+        return $this->country_code ?? config('front-sms.defaultRegion', null);
     }
 
     /**
@@ -29,7 +29,7 @@ trait Smsable
 
         $key = config('front-sms.notifiablePhoneKey');
 
-        $phone = $phoneUtil->parse($this->$key, $this->getCountryCode());
+        $phone = $phoneUtil->parse($this->$key, strtoupper($this->getCountryCode()));
 
         return  $phoneUtil->format($phone, PhoneNumberFormat::E164);
     }
