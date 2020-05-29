@@ -8,8 +8,11 @@ return [
     //number of Front or assigned
     //sender text, maximum 11
     //characters.
-    'fromId' => env('FRONT_FROM_ID', null),
+    'fromId' => env('FRONT_SENDER_ID', null),
+
+    // Password for Authentication (if you're not authenticating through IP)
+    'password' => env('FRONT_PASSWORD', null),
 
     'notifiablePhoneKey' => env('FRONT_NOTIFIABLE_KEY', 'phone'),
-    'defaultRegion' => null // ISO 3166-2 Geographic Region code (E.g. GB, NO, SE)
+    'defaultRegion' => env('FRONT_DEFAULT_REGION', null) // ISO 3166-2 Geographic Region code (E.g. GB, NO, SE)
 ];
