@@ -59,7 +59,6 @@ class FrontClientTest extends TestCase
         $this->assertObjectHasAttribute('unicode', $payload, 'API Request is missing required data');
 
         // Data are mapped correctly
-        dump($payload->serviceid);
         $this->assertEquals(config('front-sms.serviceId'), $payload->serviceid);
         $this->assertEquals($sms->from, $payload->fromid);
         $this->assertEquals($sms->to, $payload->phoneno);
