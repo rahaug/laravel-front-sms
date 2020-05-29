@@ -28,7 +28,6 @@ class CreateFrontMessagesTable extends Migration
             $table->index(['user_id', 'to', 'from']);
             $table->index(['user_id', 'delivered_at']);
             $table->index(['to']);
-            $table->index(['origid']);
         });
     }
 
@@ -39,6 +38,6 @@ class CreateFrontMessagesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sms');
+        //  Schema::dropIfExists('front_messages');
     }
 }

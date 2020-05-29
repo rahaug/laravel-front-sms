@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateFrontMessagesStatusTable extends Migration
+class CreateFrontMessageStatusesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -28,6 +28,6 @@ class CreateFrontMessagesStatusTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sms_statuses');
+        //Schema::dropIfExists('front_message_statuses');
     }
 }
