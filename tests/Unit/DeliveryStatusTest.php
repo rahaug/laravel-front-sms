@@ -2,34 +2,34 @@
 
 namespace Tests\Unit;
 
+use RolfHaug\FrontSms\DeliveryStatus;
 use RolfHaug\FrontSms\FrontMessage;
-use RolfHaug\FrontSms\FrontMessageStatus;
 use Tests\TestCase;
 
-class FrontMessageStatusTest extends TestCase
+class DeliveryStatusTest extends TestCase
 {
     /** @test */
     public function it_has_received_by_operator_status()
     {
-        $this->assertEquals(0, FrontMessageStatus::RECEIVED_BY_OPERATOR);
+        $this->assertEquals(0, DeliveryStatus::RECEIVED_BY_OPERATOR);
     }
 
     /** @test */
     public function it_has_received_by_receipient_status()
     {
-        $this->assertEquals(4, FrontMessageStatus::RECEIVED_BY_RECIPIENT);
+        $this->assertEquals(4, DeliveryStatus::RECEIVED_BY_RECIPIENT);
     }
 
     /** @test */
     public function it_has_delivery_failed_status()
     {
-        $this->assertEquals(5, FrontMessageStatus::DELIVERY_FAILED);
+        $this->assertEquals(5, DeliveryStatus::DELIVERY_FAILED);
     }
 
     /** @test */
     public function it_has_sms_relationship()
     {
-        $status = factory(FrontMessageStatus::class)->create();
+        $status = factory(DeliveryStatus::class)->create();
 
         $sms = factory(FrontMessage::class)->create(['origid' => $status->origid]);
 
@@ -41,8 +41,8 @@ class FrontMessageStatusTest extends TestCase
     /** @test */
     public function it_has_is_delivered_helper_method()
     {
-        $status = factory(FrontMessageStatus::class)->create([
-            'status' => FrontMessageStatus::RECEIVED_BY_RECIPIENT
+        $status = factory(DeliveryStatus::class)->create([
+            'status' => DeliveryStatus::RECEIVED_BY_RECIPIENT
         ]);
 
         $this->assertTrue($status->isDelivered());
@@ -51,8 +51,8 @@ class FrontMessageStatusTest extends TestCase
     /** @test */
     public function it_has_is_received_by_operator_helper_method()
     {
-        $status = factory(FrontMessageStatus::class)->create([
-            'status' => FrontMessageStatus::RECEIVED_BY_OPERATOR
+        $status = factory(DeliveryStatus::class)->create([
+            'status' => DeliveryStatus::RECEIVED_BY_OPERATOR
         ]);
 
         $this->assertTrue($status->isReceivedByOperator());
@@ -61,8 +61,8 @@ class FrontMessageStatusTest extends TestCase
     /** @test */
     public function it_has_is_failed_helper_method()
     {
-        $status = factory(FrontMessageStatus::class)->create([
-            'status' => FrontMessageStatus::DELIVERY_FAILED
+        $status = factory(DeliveryStatus::class)->create([
+            'status' => DeliveryStatus::DELIVERY_FAILED
         ]);
 
         $this->assertTrue($status->isFailed());

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @property mixed status
  */
-class FrontMessageStatus extends Model
+class DeliveryStatus extends Model
 {
     protected $guarded = [];
     const RECEIVED_BY_OPERATOR = 0; // Not delivered yet

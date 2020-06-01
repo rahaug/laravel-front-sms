@@ -3,8 +3,8 @@
 namespace Tests\Unit;
 
 use Illuminate\Support\Collection;
+use RolfHaug\FrontSms\DeliveryStatus;
 use RolfHaug\FrontSms\FrontMessage;
-use RolfHaug\FrontSms\FrontMessageStatus;
 use Tests\TestCase;
 
 class FrontMessageTest extends TestCase
@@ -15,7 +15,7 @@ class FrontMessageTest extends TestCase
         $origId = 123;
         $sms = factory(FrontMessage::class)->create(['origid' => $origId]);
 
-        factory(FrontMessageStatus::class)->create(['origid' => $origId]);
+        factory(DeliveryStatus::class)->create(['origid' => $origId]);
 
         $sms = $sms->fresh();
 
@@ -93,5 +93,16 @@ class FrontMessageTest extends TestCase
         $sms->markAsFailed();
 
         $this->assertTrue($sms->fresh()->isFailed());
+    }
+
+    /** @test */
+    public function it_has_a_isReceivedByOperator_method()
+    {
+        /** @var FrontMessage $sms */
+        $sms = factory(FrontMessage::class)->create();
+        $this->assertFalse($sms->isReceivedByOperator());
+
+        $sms->update(['received_by_operator' => true]);
+        $this->assertTrue($sms->fresh()->isReceivedByOperator());
     }
 }

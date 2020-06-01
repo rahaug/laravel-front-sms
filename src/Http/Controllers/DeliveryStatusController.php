@@ -4,17 +4,17 @@ namespace RolfHaug\FrontSms\Http\Controllers;
 
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller;
-use RolfHaug\FrontSms\FrontMessageStatus;
-use RolfHaug\FrontSms\Http\Requests\StoreFrontMessageStatus;
+use RolfHaug\FrontSms\DeliveryStatus;
+use RolfHaug\FrontSms\Http\Requests\StoreDeliveryStatus;
 
-class FrontMessageStatusController extends Controller
+class DeliveryStatusController extends Controller
 {
     use ValidatesRequests;
 
-    public function store(StoreFrontMessageStatus $request)
+    public function store(StoreDeliveryStatus $request)
     {
-        /** @var FrontMessageStatus $status */
-        $status = FrontMessageStatus::create($request->validated());
+        /** @var DeliveryStatus $status */
+        $status = DeliveryStatus::create($request->validated());
 
         if ($status->isDelivered()) {
             $status->message->markAsDelivered();

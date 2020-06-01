@@ -10,6 +10,8 @@ class FrontMessage extends Model
 
     protected $dates = ['sent_at', 'delivered_at', 'failed_at'];
 
+    protected $casts = ['received_by_operator' => 'boolean'];
+
     /**
      * Get related message statuses.
      *
@@ -17,7 +19,7 @@ class FrontMessage extends Model
      */
     public function statuses()
     {
-        return $this->hasMany(FrontMessageStatus::class, 'origid', 'origid');
+        return $this->hasMany(DeliveryStatus::class, 'origid', 'origid');
     }
 
     /**
@@ -48,6 +50,16 @@ class FrontMessage extends Model
     public function isUnicode()
     {
         return strlen($this->message) !== strlen(utf8_decode($this->message));
+    }
+
+    /**
+     * Is the message received by the operator.
+     *
+     * @return bool
+     */
+    public function isReceivedByOperator()
+    {
+        return (bool) $this->received_by_operator;
     }
 
     /**

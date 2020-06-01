@@ -23,10 +23,10 @@ class FrontSmsServiceProvider extends ServiceProvider
                 __DIR__.'/../config/front-sms.php' => config_path('front-sms.php')
             ], 'config');
 
-            if (! class_exists('CreateFrontMessagesStatusTable,')) {
+            if (! class_exists('CreateDeliveryStatusesTable')) {
                 $this->publishes([
                     __DIR__.'/../database/migrations/create_front_messages_table.php.stub' => database_path('migrations/'.date('Y_m_d_His_', time()).'create_front_messages_table.php'),
-                    __DIR__.'/../database/migrations/create_front_message_statuses_table.php.stub' => database_path('migrations/'.date('Y_m_d_His_', time()).'create_front_message_statuses_table.php'),
+                    __DIR__.'/../database/migrations/create_delivery_statuses_table.php.stub' => database_path('migrations/'.date('Y_m_d_His_', time()).'create_delivery_statuses_table.php'),
                     __DIR__.'/../database/migrations/add_phone_column_to_user_table.php.stub' => database_path('migrations/'.date('Y_m_d_His_', time()).'add_phone_column_to_user_table.php'),
                     __DIR__.'/../database/migrations/add_country_code_column_to_user.php.stub' => database_path('migrations/'.date('Y_m_d_His_', time()).'add_country_code_column_to_user.php'),
                 ], 'migrations');

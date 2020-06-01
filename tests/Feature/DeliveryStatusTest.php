@@ -4,11 +4,11 @@ namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Response;
+use RolfHaug\FrontSms\DeliveryStatus;
 use RolfHaug\FrontSms\FrontMessage;
-use RolfHaug\FrontSms\FrontMessageStatus;
 use Tests\TestCase;
 
-class FrontMessageStatusTest extends TestCase
+class DeliveryStatusTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -22,7 +22,7 @@ class FrontMessageStatusTest extends TestCase
             'status' => -1
         ]);
         $request->assertOk();
-        $status = FrontMessageStatus::first();
+        $status = DeliveryStatus::first();
 
         $this->assertNotNull($status, 'Status not created');
         $this->assertEquals($status->origid, 1234);
@@ -47,7 +47,7 @@ class FrontMessageStatusTest extends TestCase
 
         $this->post(route('sms.status.store'), [
             'origid' => $message->origid,
-            'status' => FrontMessageStatus::RECEIVED_BY_RECIPIENT
+            'status' => DeliveryStatus::RECEIVED_BY_RECIPIENT
         ]);
 
         $this->assertTrue($message->fresh()->isDelivered());
@@ -60,7 +60,7 @@ class FrontMessageStatusTest extends TestCase
 
         $this->post(route('sms.status.store'), [
             'origid' => $message->origid,
-            'status' => FrontMessageStatus::DELIVERY_FAILED
+            'status' => DeliveryStatus::DELIVERY_FAILED
         ]);
 
         $this->assertTrue($message->fresh()->isFailed());
