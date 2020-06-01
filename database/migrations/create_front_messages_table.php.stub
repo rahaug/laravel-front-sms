@@ -22,6 +22,7 @@ class CreateFrontMessagesTable extends Migration
             $table->string('message');
             $table->unsignedSmallInteger('price')->default(0);
             $table->timestamp('sent_at')->nullable();
+            $table->boolean('received_by_operator')->default(false);
             $table->timestamp('delivered_at')->nullable();
             $table->timestamp('failed_at')->nullable();
             $table->timestamps();

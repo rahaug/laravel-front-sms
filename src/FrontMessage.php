@@ -101,4 +101,15 @@ class FrontMessage extends Model
 
         return $this;
     }
+
+    /**
+     * Mark message as received by operator.
+     *
+     * @return $this
+     */
+    public function markAsReceivedByOperator()
+    {
+        $this->update(['received_by_operator' => true]);
+        return $this;
+    }
 }

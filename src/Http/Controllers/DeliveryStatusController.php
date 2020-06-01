@@ -16,7 +16,9 @@ class DeliveryStatusController extends Controller
         /** @var DeliveryStatus $status */
         $status = DeliveryStatus::create($request->validated());
 
-        if ($status->isDelivered()) {
+        if ($status->isReceivedByOperator()) {
+            $status->message->markAsReceivedByOperator();
+        } elseif ($status->isDelivered()) {
             $status->message->markAsDelivered();
         } elseif ($status->isFailed()) {
             $status->message->markAsFailed();

@@ -105,4 +105,14 @@ class FrontMessageTest extends TestCase
         $sms->update(['received_by_operator' => true]);
         $this->assertTrue($sms->fresh()->isReceivedByOperator());
     }
+
+    /** @test */
+    public function it_has_a_markAsReceivedByOperator_method()
+    {
+        $sms = factory(FrontMessage::class)->create();
+
+        $sms->markAsReceivedByOperator();
+
+        $this->assertTrue($sms->fresh()->isReceivedByOperator());
+    }
 }

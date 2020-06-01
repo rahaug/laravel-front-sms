@@ -41,6 +41,19 @@ class DeliveryStatusTest extends TestCase
     }
 
     /** @test */
+    public function it_marks_message_as_received_by_operator()
+    {
+        $message = factory(FrontMessage::class)->create(['origid' => 1234]);
+
+        $this->post(route('sms.status.store'), [
+            'origid' => $message->origid,
+            'status' => DeliveryStatus::RECEIVED_BY_OPERATOR
+        ]);
+
+        $this->assertTrue($message->fresh()->isReceivedByOperator());
+    }
+
+    /** @test */
     public function it_marks_message_as_delivered()
     {
         $message = factory(FrontMessage::class)->create(['origid' => 1234]);
