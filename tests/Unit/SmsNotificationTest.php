@@ -121,6 +121,31 @@ class SmsNotificationTest extends TestCase
     }
 
     /** @test */
+    public function it_gets_country_code_from_E164_formatted_phone()
+    {
+        $this->app['config']->set('front-sms.defaultRegion', null);
+
+        $user = $this->createUser(['phone' => '+4790012345', 'country_code' => null]);
+
+        $notification = (new SmsNotification('Test Message'));
+        $sms = $notification->toSms($user);
+
+        $this->assertEquals('+4790012345', $sms->to);
+    }
+
+    /** @test */
+    public function it_throws_exception_if_trying_to_get_country_code_from_number_and_it_misses_the_plus_sign()
+    {
+        $this->expectException(NumberParseException::class);
+        $this->app['config']->set('front-sms.defaultRegion', null);
+
+        $user = $this->createUser(['phone' => '4790012345', 'country_code' => null]);
+
+        $notification = (new SmsNotification('Test Message'));
+        $sms = $notification->toSms($user);
+    }
+
+    /** @test */
     public function it_sets_to_field_from_user_through_method()
     {
         $user = $this->createUser();
