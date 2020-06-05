@@ -17,7 +17,7 @@ class DeliveryStatusTest extends TestCase
     {
         $message = factory(FrontMessage::class)->create(['origid' => 1234]);
 
-        $request = $this->post(route('sms.status.store'), [
+        $request = $this->post(route('sms.report.store'), [
             'origid' => $message->origid,
             'status' => -1
         ]);
@@ -32,7 +32,7 @@ class DeliveryStatusTest extends TestCase
     /** @test */
     public function it_does_not_store_status_message_if_origid_does_not_exists()
     {
-        $request = $this->post(route('sms.status.store'), [
+        $request = $this->post(route('sms.report.store'), [
             'origid' => 111,
             'status' => -1
         ]);
@@ -45,7 +45,7 @@ class DeliveryStatusTest extends TestCase
     {
         $message = factory(FrontMessage::class)->create(['origid' => 1234]);
 
-        $this->post(route('sms.status.store'), [
+        $this->post(route('sms.report.store'), [
             'origid' => $message->origid,
             'status' => DeliveryStatus::RECEIVED_BY_OPERATOR
         ]);
@@ -58,7 +58,7 @@ class DeliveryStatusTest extends TestCase
     {
         $message = factory(FrontMessage::class)->create(['origid' => 1234]);
 
-        $this->post(route('sms.status.store'), [
+        $this->post(route('sms.report.store'), [
             'origid' => $message->origid,
             'status' => DeliveryStatus::RECEIVED_BY_RECIPIENT
         ]);
@@ -71,7 +71,7 @@ class DeliveryStatusTest extends TestCase
     {
         $message = factory(FrontMessage::class)->create(['origid' => 1234]);
 
-        $this->post(route('sms.status.store'), [
+        $this->post(route('sms.report.store'), [
             'origid' => $message->origid,
             'status' => DeliveryStatus::DELIVERY_FAILED
         ]);
