@@ -52,17 +52,22 @@ class FrontClient
      */
     private function mapPayload(FrontMessage $message)
     {
-        return [
+        $payload = [
             RequestOptions::JSON => [
                 'serviceid' => (int) $this->serviceId,
                 'fromid' => $message->from,
                 'phoneno' => $message->to,
                 'txt' => $message->message,
                 'price' => $message->price,
-                'unicode' => $message->isUnicode(),
-                'password' => config('front-sms.password', null),
+                'unicode' => $message->isUnicode()
             ]
         ];
+
+        if($password = config('front-sms.password')) {
+            $payload[RequestOptions::JSON]['password'] = $password;
+        }
+
+        return $payload;
     }
 
     /**

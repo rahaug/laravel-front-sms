@@ -57,6 +57,7 @@ class FrontClientTest extends TestCase
         $this->assertObjectHasAttribute('txt', $payload, 'API Request is missing required data');
         $this->assertObjectHasAttribute('price', $payload, 'API Request is missing required data');
         $this->assertObjectHasAttribute('unicode', $payload, 'API Request is missing required data');
+        $this->assertObjectNotHasAttribute('password', $payload, 'API Request included password when it shoudl not');
 
         // Data are mapped correctly
         $this->assertEquals(config('front-sms.serviceId'), $payload->serviceid);
@@ -68,6 +69,27 @@ class FrontClientTest extends TestCase
 
         $this->assertEquals($origId, $sms->fresh()->origid);
     }
+
+    /** @test */
+    public function it_includes_password_in_api_request_when_given()
+    {
+        $this->app['config']->set('front-sms.password', 'secret');
+
+        $sms = factory(FrontMessage::class)->create(['price' => 100]);
+        $origId = 1234;
+
+        $middleware = $this->pushMessageAndReturnMiddleware($sms, ['errorcode' => 0, 'id' => $origId, 'description' => 'OK']);
+
+        /** @var Request $middleware */
+        $request = $middleware['request'];
+        $payload = $request->getBody()->getContents();
+        $this->assertJson($payload, 'Payload is not JSON');
+
+        $payload = json_decode($payload);
+
+        $this->assertObjectHasAttribute('password', $payload, 'API Request is missing required data');
+    }
+
 
     /** @test */
     public function it_throws_invalid_api_request_exception_if_error_code_is_greater_than_0()
