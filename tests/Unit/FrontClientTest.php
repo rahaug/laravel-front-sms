@@ -73,7 +73,7 @@ class FrontClientTest extends TestCase
     public function it_throws_invalid_api_request_exception_if_error_code_is_greater_than_0()
     {
         $this->expectException(InvalidApiRequest::class);
-        $this->expectExceptionMessageRegExp('/Something happened/');
+        $this->expectExceptionMessage('Something happened');
 
         $sms = factory(FrontMessage::class)->create();
 
