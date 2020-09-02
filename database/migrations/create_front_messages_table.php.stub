@@ -19,7 +19,7 @@ class CreateFrontMessagesTable extends Migration
             $table->unsignedBigInteger('user_id')->nullable();
             $table->string('to');
             $table->string('from');
-            $table->string('message');
+            $table->text('message');
             $table->unsignedSmallInteger('price')->default(0);
             $table->timestamp('sent_at')->nullable();
             $table->boolean('received_by_operator')->default(false);
