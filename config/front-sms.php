@@ -1,6 +1,8 @@
 <?php
 
 return [
+    // Output SMS in log for debugging purposes
+    'fakeMessages' => env('FRONT_FAKE_MESSAGES', true),
     // Unique customer ID
     'serviceId' => env('FRONT_SERVICE_ID', null),
     // Unique sender ID

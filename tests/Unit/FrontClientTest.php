@@ -9,6 +9,7 @@ use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\Uri;
+use Illuminate\Support\Facades\Log;
 use RolfHaug\FrontSms\Exceptions\Front\InvalidApiRequest;
 use RolfHaug\FrontSms\FrontClient;
 use RolfHaug\FrontSms\FrontMessage;
@@ -90,7 +91,6 @@ class FrontClientTest extends TestCase
         $this->assertObjectHasAttribute('password', $payload, 'API Request is missing required data');
     }
 
-
     /** @test */
     public function it_throws_invalid_api_request_exception_if_error_code_is_greater_than_0()
     {
@@ -123,6 +123,38 @@ class FrontClientTest extends TestCase
         $payload = $this->getPayload($middleware);
 
         $this->assertEquals(true, $payload->unicode, 'Unicode field was not set properly');
+    }
+
+    /** @test */
+    public function it_writes_message_to_log_if_fake_message_is_enabled()
+    {
+        $this->app->config->set('front.fakeMessages', true);
+        $this->assertTrue(config('front.fakeMessages'));
+
+        $sms = factory(FrontMessage::class)->create();
+
+        Log::shouldReceive('info')
+            ->once()
+            ->withArgs(function ($message, $array) use ($sms) {
+                $this->assertEquals('Pretending to send SMS', $message);
+
+                $this->assertArrayHasKey('serviceid', $array);
+                $this->assertArrayHasKey('fromid', $array);
+                $this->assertArrayHasKey('phoneno', $array);
+                $this->assertArrayHasKey('txt', $array);
+                $this->assertArrayHasKey('price', $array);
+                $this->assertArrayHasKey('unicode', $array);
+
+                $this->assertEquals($sms->from, $array['fromid']);
+                $this->assertEquals($sms->to, $array['phoneno']);
+                $this->assertEquals($sms->message, $array['txt']);
+                $this->assertEquals($sms->price, $array['price']);
+                $this->assertEquals($sms->isUnicode(), $array['unicode']);
+
+                return true;
+            });
+
+        (new FrontClient(new Client()))->push($sms);
     }
 
     protected function pushMessageAndReturnMiddleware(FrontMessage $sms, $response = null)

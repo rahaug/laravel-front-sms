@@ -88,6 +88,9 @@ FRONT_PASSWORD=
 
 # ISO 3166-2 Geographic Region code (E.g. GB, NO, SE)
 FRONT_DEFAULT_REGION=
+
+# Debugging: print messages to the log instead of sending to Front
+FRONT_FAKE_MESSAGES=false
 ```
 
 Register your Delivery report URL in your front settings page
@@ -248,3 +251,7 @@ Route::post('custom/path/to/sms/report', [\RolfHaug\FrontSms\Http\Controllers\De
 ## Testing
 
 The package use the Laravel Notification Interface, so you can test the notifications with [Notification Fake](https://laravel.com/docs/7.x/mocking#notification-fake).
+
+## Debugging
+
+Set `FRONT_FAKE_MESSAGES=true` in your `.env` file to get messages outputted in the Laravel Log. Messages will not be sent to Front with this feature enabled.
