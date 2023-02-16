@@ -10,8 +10,11 @@ use Illuminate\Database\Eloquent\Model;
 class DeliveryStatus extends Model
 {
     protected $guarded = [];
+
     const RECEIVED_BY_OPERATOR = 0; // Not delivered yet
+
     const RECEIVED_BY_RECIPIENT = 4; // Successfully Delivered
+
     const DELIVERY_FAILED = 5; // Not delivered
 
     /**
