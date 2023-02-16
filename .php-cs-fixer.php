@@ -1,28 +1,28 @@
 <?php
-return PhpCsFixer\Config::create()
-    ->setRules(array(
+return (new PhpCsFixer\Config)
+->setRules(array(
         '@PSR2' => true,
         'array_indentation' => true,
         'array_syntax' => array('syntax' => 'short'),
         'combine_consecutive_unsets' => true,
-        'method_separation' => true,
-        'no_multiline_whitespace_before_semicolons' => true,
+        'class_attributes_separation' => true,
+        'multiline_whitespace_before_semicolons' => true,
         'single_quote' => true,
-        'binary_operator_spaces' => array(
-            'align_double_arrow' => false,
-            'align_equals' => false,
-        ),
+       /* 'operators' => [
+            '=>' => 'single_space',
+            '=' => 'single_space'
+        ],*/
         // 'blank_line_after_opening_tag' => true,
         // 'blank_line_before_return' => true,
-        'braces' => array(
+        'braces' => [
             'allow_single_line_closure' => true,
-        ),
+        ],
         // 'cast_spaces' => true,
         // 'class_definition' => array('singleLine' => true),
         'concat_space' => array('spacing' => 'none'),
         'declare_equal_normalize' => true,
         'function_typehint_space' => true,
-        'hash_to_slash_comment' => true,
+        'single_line_comment_style' => true,
         'include' => true,
         'lowercase_cast' => true,
         // 'native_function_casing' => true,
@@ -32,14 +32,16 @@ return PhpCsFixer\Config::create()
         // 'no_empty_comment' => true,
         // 'no_empty_phpdoc' => true,
         // 'no_empty_statement' => true,
-        'no_extra_consecutive_blank_lines' => array(
-            'curly_brace_block',
-            'extra',
-            'parenthesis_brace_block',
-            'square_brace_block',
-            'throw',
-            'use',
-        ),
+        'no_extra_blank_lines' => [
+            'tokens' => [
+                'curly_brace_block',
+                'extra',
+                'parenthesis_brace_block',
+                'square_brace_block',
+                'throw',
+                'use',
+            ]
+        ],
         // 'no_leading_import_slash' => true,
         // 'no_leading_namespace_whitespace' => true,
         // 'no_mixed_echo_print' => array('use' => 'echo'),

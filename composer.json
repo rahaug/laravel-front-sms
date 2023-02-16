@@ -17,7 +17,7 @@
     },
     "require-dev": {
         "orchestra/testbench": "^3.8",
-        "friendsofphp/php-cs-fixer": "^2.16"
+        "friendsofphp/php-cs-fixer": "^3.4"
     },
     "autoload": {
         "psr-4": {
