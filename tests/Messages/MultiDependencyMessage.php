@@ -8,6 +8,7 @@ use Tests\Article;
 class MultiDependencyMessage extends SmsNotification
 {
     public $message = 'Hi %s, you have a new comment on your "%s" article. Read it here: %s';
+
     /**
      * @var Article
      */
