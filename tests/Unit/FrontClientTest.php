@@ -157,6 +157,12 @@ class FrontClientTest extends TestCase
         (new FrontClient(new Client()))->push($sms);
     }
 
+    /** @test */
+    public function it_has_fake_messages_config_set_to_false_as_default()
+    {
+        $this->assertFalse(config('front-sms.fakeMessages'));
+    }
+
     protected function pushMessageAndReturnMiddleware(FrontMessage $sms, $response = null)
     {
         if (! $response) {
