@@ -26,7 +26,7 @@ class FrontClient
     public function __construct(Client $client)
     {
         $this->serviceId = config('front-sms.serviceId');
-        $this->fakeMessages = config('front.fakeMessages');
+        $this->fakeMessages = config('front-sms.fakeMessages');
 
         $this->client = $client;
     }

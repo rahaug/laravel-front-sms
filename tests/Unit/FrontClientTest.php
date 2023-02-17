@@ -128,8 +128,8 @@ class FrontClientTest extends TestCase
     /** @test */
     public function it_writes_message_to_log_if_fake_message_is_enabled()
     {
-        $this->app->config->set('front.fakeMessages', true);
-        $this->assertTrue(config('front.fakeMessages'));
+        $this->app['config']->set('front-sms.fakeMessages', true);
+        $this->assertTrue(config('front-sms.fakeMessages'));
 
         $sms = factory(FrontMessage::class)->create();
 
