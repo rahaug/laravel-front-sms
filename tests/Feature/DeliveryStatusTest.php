@@ -15,7 +15,7 @@ class DeliveryStatusTest extends TestCase
     /** @test */
     public function it_can_store_status_message()
     {
-        $message = factory(FrontMessage::class)->create(['origid' => 1234]);
+        $message = FrontMessage::factory()->create(['origid' => 1234]);
 
         $request = $this->post(route('sms.report.store'), [
             'origid' => $message->origid,
@@ -43,7 +43,7 @@ class DeliveryStatusTest extends TestCase
     /** @test */
     public function it_marks_message_as_received_by_operator()
     {
-        $message = factory(FrontMessage::class)->create(['origid' => 1234]);
+        $message = FrontMessage::factory()->create(['origid' => 1234]);
 
         $this->post(route('sms.report.store'), [
             'origid' => $message->origid,
@@ -56,7 +56,7 @@ class DeliveryStatusTest extends TestCase
     /** @test */
     public function it_marks_message_as_delivered()
     {
-        $message = factory(FrontMessage::class)->create(['origid' => 1234]);
+        $message = FrontMessage::factory()->create(['origid' => 1234]);
 
         $this->post(route('sms.report.store'), [
             'origid' => $message->origid,
@@ -69,7 +69,7 @@ class DeliveryStatusTest extends TestCase
     /** @test */
     public function it_marks_message_as_failed()
     {
-        $message = factory(FrontMessage::class)->create(['origid' => 1234]);
+        $message = FrontMessage::factory()->create(['origid' => 1234]);
 
         $this->post(route('sms.report.store'), [
             'origid' => $message->origid,

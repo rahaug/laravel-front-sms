@@ -2,15 +2,24 @@
 
 namespace RolfHaug\FrontSms\Database\Factories;
 
-use Faker\Generator as Faker;
-use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use RolfHaug\FrontSms\FrontMessage;
 
-/** @var Factory $factory */
-$factory->define(FrontMessage::class, function (Faker $faker) {
-    return [
-        'from' => $faker->firstName,
-        'to' => $faker->phoneNumber,
-        'message' => $faker->sentence,
-    ];
-});
+class FrontMessageFactory extends Factory
+{
+    protected $model = FrontMessage::class;
+
+    /**
+     * Define the model's default state.
+     *
+     * @return array<string, mixed>
+     */
+    public function definition(): array
+    {
+        return [
+            'from' => fake()->firstName,
+            'to' => fake()->phoneNumber,
+            'message' => fake()->sentence,
+        ];
+    }
+}

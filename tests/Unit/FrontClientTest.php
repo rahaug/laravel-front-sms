@@ -10,6 +10,7 @@ use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\Uri;
 use Illuminate\Support\Facades\Log;
+use Mockery;
 use RolfHaug\FrontSms\Exceptions\Front\InvalidApiRequest;
 use RolfHaug\FrontSms\FrontClient;
 use RolfHaug\FrontSms\FrontMessage;
@@ -20,7 +21,7 @@ class FrontClientTest extends TestCase
     /** @test */
     public function it_sends_sms_to_correct_url_with_correct_payload_and_updates_the_message_orig_id()
     {
-        $sms = factory(FrontMessage::class)->create(['price' => 100]);
+        $sms = FrontMessage::factory()->create(['price' => 100]);
         $origId = 1234;
 
         $middleware = $this->pushMessageAndReturnMiddleware($sms, ['errorcode' => 0, 'id' => $origId, 'description' => 'OK']);
@@ -52,13 +53,13 @@ class FrontClientTest extends TestCase
         $payload = json_decode($payload);
 
         // Keys are sent
-        $this->assertObjectHasAttribute('serviceid', $payload, 'API Request is missing required data');
-        $this->assertObjectHasAttribute('fromid', $payload, 'API Request is missing required data');
-        $this->assertObjectHasAttribute('phoneno', $payload, 'API Request is missing required data');
-        $this->assertObjectHasAttribute('txt', $payload, 'API Request is missing required data');
-        $this->assertObjectHasAttribute('price', $payload, 'API Request is missing required data');
-        $this->assertObjectHasAttribute('unicode', $payload, 'API Request is missing required data');
-        $this->assertObjectNotHasAttribute('password', $payload, 'API Request included password when it shoudl not');
+        $this->assertObjectHasProperty('serviceid', $payload, 'API Request is missing required data');
+        $this->assertObjectHasProperty('fromid', $payload, 'API Request is missing required data');
+        $this->assertObjectHasProperty('phoneno', $payload, 'API Request is missing required data');
+        $this->assertObjectHasProperty('txt', $payload, 'API Request is missing required data');
+        $this->assertObjectHasProperty('price', $payload, 'API Request is missing required data');
+        $this->assertObjectHasProperty('unicode', $payload, 'API Request is missing required data');
+        $this->assertObjectNotHasProperty('password', $payload, 'API Request included password when it shoudl not');
 
         // Data are mapped correctly
         $this->assertEquals(config('front-sms.serviceId'), $payload->serviceid);
@@ -76,7 +77,7 @@ class FrontClientTest extends TestCase
     {
         $this->app['config']->set('front-sms.password', 'secret');
 
-        $sms = factory(FrontMessage::class)->create(['price' => 100]);
+        $sms = FrontMessage::factory()->create(['price' => 100]);
         $origId = 1234;
 
         $middleware = $this->pushMessageAndReturnMiddleware($sms, ['errorcode' => 0, 'id' => $origId, 'description' => 'OK']);
@@ -88,7 +89,7 @@ class FrontClientTest extends TestCase
 
         $payload = json_decode($payload);
 
-        $this->assertObjectHasAttribute('password', $payload, 'API Request is missing required data');
+        $this->assertObjectHasProperty('password', $payload, 'API Request is missing required data');
     }
 
     /** @test */
@@ -97,7 +98,7 @@ class FrontClientTest extends TestCase
         $this->expectException(InvalidApiRequest::class);
         $this->expectExceptionMessage('Something happened');
 
-        $sms = factory(FrontMessage::class)->create();
+        $sms = FrontMessage::factory()->create();
 
         $this->pushMessageAndReturnMiddleware($sms, ['errorcode' => 1, 'id' => 0, 'description' => 'Something happened']);
     }
@@ -105,7 +106,7 @@ class FrontClientTest extends TestCase
     /** @test */
     public function it_defaults_to_not_using_unicode()
     {
-        $sms = factory(FrontMessage::class)->create(['message' => 'Not a unicode message']);
+        $sms = FrontMessage::factory()->create(['message' => 'Not a unicode message']);
         $this->assertFalse($sms->isUnicode());
 
         $middleware = $this->pushMessageAndReturnMiddleware($sms);
@@ -113,10 +114,10 @@ class FrontClientTest extends TestCase
         $this->assertEquals(false, $payload->unicode, 'Unicode field was not set properly');
     }
 
-    /** @test */
-    public function it_sets_unicode_field_to_true_if_message_is_unicode()
+/** @test */
+public function it_sets_unicode_field_to_true_if_message_is_unicode()
     {
-        $sms = factory(FrontMessage::class)->create(['message' => 'Unicode Message 💪']);
+        $sms = FrontMessage::factory()->create(['message' => 'Unicode Message 💪']);
         $this->assertTrue($sms->isUnicode());
 
         $middleware = $this->pushMessageAndReturnMiddleware($sms);
@@ -131,7 +132,8 @@ class FrontClientTest extends TestCase
         $this->app['config']->set('front-sms.fakeMessages', true);
         $this->assertTrue(config('front-sms.fakeMessages'));
 
-        $sms = factory(FrontMessage::class)->create();
+        $sms = FrontMessage::factory()->create();
+
 
         Log::shouldReceive('info')
             ->once()

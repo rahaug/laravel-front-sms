@@ -19,7 +19,7 @@ class DummyMessageTest extends TestCase
     public function it_has_a_default_message_with_an_argument()
     {
         $stub = $this->getStubClass();
-        $this->assertObjectHasAttribute('message', $stub);
+        $this->assertObjectHasProperty('message', $stub);
         $this->assertStringContainsString('%s', $stub->message);
     }
 

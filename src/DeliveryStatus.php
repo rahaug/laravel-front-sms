@@ -2,13 +2,17 @@
 
 namespace RolfHaug\FrontSms;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use RolfHaug\FrontSms\Database\Factories\DeliveryStatusFactory;
 
 /**
  * @property mixed status
  */
 class DeliveryStatus extends Model
 {
+    use HasFactory;
+
     protected $guarded = [];
 
     const RECEIVED_BY_OPERATOR = 0; // Not delivered yet
@@ -16,6 +20,11 @@ class DeliveryStatus extends Model
     const RECEIVED_BY_RECIPIENT = 4; // Successfully Delivered
 
     const DELIVERY_FAILED = 5; // Not delivered
+
+    protected static function newFactory()
+    {
+        return DeliveryStatusFactory::new();
+    }
 
     /**
      * Related SMS Message

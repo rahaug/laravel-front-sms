@@ -29,9 +29,9 @@ class DeliveryStatusTest extends TestCase
     /** @test */
     public function it_has_sms_relationship()
     {
-        $status = factory(DeliveryStatus::class)->create();
+        $status = DeliveryStatus::factory()->create();
 
-        $sms = factory(FrontMessage::class)->create(['origid' => $status->origid]);
+        $sms = FrontMessage::factory()->create(['origid' => $status->origid]);
 
         $this->assertNotNull($status->message);
         $this->assertInstanceOf(FrontMessage::class, $status->message);
@@ -41,7 +41,7 @@ class DeliveryStatusTest extends TestCase
     /** @test */
     public function it_has_is_delivered_helper_method()
     {
-        $status = factory(DeliveryStatus::class)->create([
+        $status = DeliveryStatus::factory()->create([
             'status' => DeliveryStatus::RECEIVED_BY_RECIPIENT
         ]);
 
@@ -51,7 +51,7 @@ class DeliveryStatusTest extends TestCase
     /** @test */
     public function it_has_is_received_by_operator_helper_method()
     {
-        $status = factory(DeliveryStatus::class)->create([
+        $status = DeliveryStatus::factory()->create([
             'status' => DeliveryStatus::RECEIVED_BY_OPERATOR
         ]);
 
@@ -61,7 +61,7 @@ class DeliveryStatusTest extends TestCase
     /** @test */
     public function it_has_is_failed_helper_method()
     {
-        $status = factory(DeliveryStatus::class)->create([
+        $status = DeliveryStatus::factory()->create([
             'status' => DeliveryStatus::DELIVERY_FAILED
         ]);
 

@@ -2,15 +2,27 @@
 
 namespace RolfHaug\FrontSms;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use RolfHaug\FrontSms\Database\Factories\FrontMessageFactory;
 
 class FrontMessage extends Model
 {
+    use HasFactory;
     protected $guarded = [];
 
-    protected $dates = ['sent_at', 'delivered_at', 'failed_at'];
+    protected $casts = [
+        'received_by_operator' => 'boolean',
+        'sent_at' => 'datetime',
+        'delivered_at' => 'datetime',
+        'failed_at' => 'datetime'
+    ];
 
-    protected $casts = ['received_by_operator' => 'boolean'];
+
+    protected static function newFactory()
+    {
+        return FrontMessageFactory::new();
+    }
 
     /**
      * Get related message statuses.
@@ -49,7 +61,7 @@ class FrontMessage extends Model
      */
     public function isUnicode()
     {
-        return strlen($this->message) !== strlen(utf8_decode($this->message));
+        return mb_detect_encoding($this->message, ['ASCII', 'UTF-8']) === 'UTF-8';
     }
 
     /**
