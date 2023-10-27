@@ -1,0 +1,43 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class CreateFrontInboundMessagesTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('front_inbound_messages', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('to');
+            $table->string('from');
+            $table->string('keyword')->nullable();
+            $table->text('message');
+            $table->unsignedInteger('counter')->nullable();
+            $table->json('files')->nullable();
+            $table->timestamp('sent_at');
+            $table->timestamps();
+
+            $table->index(['to', 'from', 'sent_at']);
+            $table->index(['to', 'keyword']);
+            $table->index(['from']);
+
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        //  Schema::dropIfExists('front_inbound_messages');
+    }
+}

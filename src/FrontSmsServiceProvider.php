@@ -25,6 +25,7 @@ class FrontSmsServiceProvider extends ServiceProvider
 
             $this->publishes([
                 __DIR__.'/../database/migrations/create_front_messages_table.php.stub' => database_path('migrations/'.date('Y_m_d_His_', time()).'create_front_messages_table.php'),
+                __DIR__.'/../database/migrations/create_front_inbound_messages_table.php.stub' => database_path('migrations/'.date('Y_m_d_His_', time()).'create_front_messages_table.php'),
                 __DIR__.'/../database/migrations/create_delivery_statuses_table.php.stub' => database_path('migrations/'.date('Y_m_d_His_', time()).'create_delivery_statuses_table.php'),
             ], 'migrations');
 
