@@ -1,9 +1,7 @@
 # Laravel Front SMS
 Send SMS to your users with Laravel and [Front SMS Gateway API](https://fro.no/sms/sms-gateway?utm_source=Rolf%20Haug%20Laravel%20Package&utm_medium=link&utm_campaign=Package%20Description) through the traditional [notification interface](https://laravel.com/docs/7.x/notifications) of Laravel. 
 
-⚠️ The package support outbound SMS and incoming delivery reports. It does **not** support incoming messages yet. Feel free to contribute.
-
-
+ The package support outbound and inbound SMS, as well as and incoming delivery reports.
 
 
 ## Quick usage example
@@ -61,7 +59,7 @@ php artisan vendor:publish --provider="RolfHaug\FrontSms\FrontSmsServiceProvider
 If you do not have a phone column on the user model already. Publish the user related migrations:
 
 ```php
-art vendor:publish --provider="RolfHaug\FrontSms\FrontSmsServiceProvider" --tag=user-migrations
+php artisan vendor:publish --provider="RolfHaug\FrontSms\FrontSmsServiceProvider" --tag=user-migrations
 ```
 
 **Please note:**
@@ -93,9 +91,26 @@ FRONT_DEFAULT_REGION=
 FRONT_FAKE_MESSAGES=false
 ```
 
-Register your Delivery report URL in your front settings page
+If you want to receive Delivery Reports or Inbound SMS Messages you must exclude the SMS api routes from CSRF Verification.
+```
+// app/Http/Middleware/VerifyCsrfToken.php
+
+class VerifyCsrfToken extends Middleware
+{
+    protected $except = [
+        'sms/*',
+    ];
+}
+```
+
+Register your Delivery report URL in your Front settings page
 ```
 yourdomain.com/sms/report
+```
+
+Register your Incoming SMS URL in your Front settings page
+```
+yourdomain.com/sms/inbound
 ```
 
 Then add the `RolfHaug\FrontSms\Traits\Smsable` trait to your user model.
@@ -195,6 +210,28 @@ $user = App\User::first();
 $user->notify($message);
 ```
 
+## Inbound Messages
+Inbound messages can be access through the `RolfHaug\FrontSms\FrontInboundMessage` model.
+
+```
+use RolfHaug\FrontSms\FrontInboundMessage;
+
+$messages = FrontInboundMessage::where('sent_at', now()->startOfDay())->get();
+```
+
+If you prefer to use another model name, you could create a new model in your project and extend the `FrontInboundMessage` model.
+
+```
+namespace App\Models;
+
+class IncomingSms extends FrontInboundMessage {}
+```
+
+Then get all inbound messages like this:
+```
+$messages = App\Models\IncomingSms::all();
+```
+
 ## Tips
 
 It is recommended to use vsprintf in the `getMessage` function to compile dynamic data from the notifiable (user), like the example above. 
@@ -237,7 +274,7 @@ You are now ready to send SMS to your users.
 
 
 
-## Delivery Reports 
+## Route - Delivery Reports 
 
 Front will send delivery reports on outbound SMS messages to the url you defined in your Front settings page. By default the route should be set to `yourdomain.com/sms/reports`.
 
@@ -245,6 +282,16 @@ You can override it by creating your own POST route and use `RolfHaug\FrontSms\H
 
 ```php
 Route::post('custom/path/to/sms/report', [\RolfHaug\FrontSms\Http\Controllers\DeliveryStatusController::class, 'store'])->name('sms.report.store');
+```
+
+## Route - Inbound SMS Messages
+
+Front will send inbound SMS messages to the url you defined in your Front settings page. By default the route should be set to `yourdomain.com/sms/inbound`.
+
+You can override it by creating your own POST route and use `RolfHaug\FrontSms\Http\Controllers\InboundMessageController@store`.
+
+```php
+Route::post('custom/path/to/sms/report', [\RolfHaug\FrontSms\Http\Controllers\InboundMessageController::class, 'store'])->name('sms.inbound.store');
 ```
 
 
@@ -255,3 +302,12 @@ The package use the Laravel Notification Interface, so you can test the notifica
 ## Debugging
 
 Set `FRONT_FAKE_MESSAGES=true` in your `.env` file to get messages outputted in the Laravel Log. Messages will not be sent to Front with this feature enabled.
+
+## Incoming SMS to local environment
+If you want to test your system by receiving actual DeliveryReports or Inbound SMS Messages you can use [ngrok](https://ngrok.com/).
+
+1. Create a free account claim your static domain
+2. Claim your static domain from ngrok
+3. Enter your static domain in the Front settings page `your-ngrok-domain.com/sms/report` and `your-ngrok-domain.com/sms/inbound`
+4. Activate ngrok in your local environment `ngrok http --domain=your-ngrok-domaincom 80`
+5. Inbound SMS and Delivery reports will now arrive in your local environment
