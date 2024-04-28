@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.5.0] - 2024-04-28
+- Feat: support [on-demand notifications](https://laravel.com/docs/10.x/notifications#on-demand-notifications)
+- Docs: improve docs about testing on-demand notifications
+- Docs: update links to point to Laravel 10 documentation
+
 ## [0.4.0] - 2023-10-27
 - Feat: Support inbound SMS messages from Front
 - Docs: improve the docs and add section about inbound SMS messages 
