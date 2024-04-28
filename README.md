@@ -299,6 +299,39 @@ Route::post('custom/path/to/sms/report', [\RolfHaug\FrontSms\Http\Controllers\In
 
 The package use the Laravel Notification Interface, so you can test the notifications with [Notification Fake](https://laravel.com/docs/10.x/mocking#notification-fake).
 
+There are many ways to test [on-demand notifications](https://laravel.com/docs/10.x/notifications#on-demand-notifications), one way to do it like this:
+
+```
+use RolfHaug\FrontSms\Channels\SmsChannel;
+use App\Notifications\Sms\MySmsNotification
+
+// Send anonymous / on-demand notification
+Notification::route(SmsChannel::class, '+4799887766')->notify(new MySmsNotification($dependencies));
+```
+
+Tests could look something like this:
+```
+use Illuminate\Support\Facades\Notification
+use Illuminate\Notifications\AnonymousNotifiable
+use RolfHaug\FrontSms\Channels\SmsChannel;
+use App\Notifications\Sms\MySmsNotification
+
+Notification::fake();
+// Trigger SMS
+
+// Use assertSentOnDemand "helper"
+Notification::assertSentOnDemand(MySmsNotification::class, function($notification, $channels, $notifiable){
+    // Do any inspections necessary
+    return $notifiable->routes[SmsChannel::class] === '+4799887766';
+});
+
+// Or use "raw" assertSentTo
+Notification::assertSentTo(new AnonymousNotifiable(), MySmsNotification::class, function ($notification, $channels, $notifiable){
+    // Do any inspections necessary
+    return $notifiable->routes[SmsChannel::class] === '+4799887766';
+});
+```
+
 ## Debugging
 
 Set `FRONT_FAKE_MESSAGES=true` in your `.env` file to get messages outputted in the Laravel Log. Messages will not be sent to Front with this feature enabled.
