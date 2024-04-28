@@ -4,6 +4,7 @@ namespace RolfHaug\FrontSms\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Notifications\AnonymousNotifiable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Validator;
@@ -177,7 +178,9 @@ class SmsNotification extends Notification implements ShouldQueue, Smsable
 
         $notifiable = null;
 
-        if (is_object($to)) {
+        if($to instanceof AnonymousNotifiable) {
+            $to = $to->routes[SmsChannel::class];
+        }elseif(is_object($to)) {
             $key = config('front-sms.notifiablePhoneKey');
             $notifiable = $to;
             $to = $notifiable->$key;

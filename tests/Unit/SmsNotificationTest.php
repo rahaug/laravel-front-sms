@@ -2,17 +2,22 @@
 
 namespace Tests\Unit;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
 use libphonenumber\NumberParseException;
+use RolfHaug\FrontSms\Channels\SmsChannel;
 use RolfHaug\FrontSms\FrontMessage;
 use RolfHaug\FrontSms\Notifications\SmsNotification;
 use Tests\Article;
 use Tests\Messages\DynamicMessage;
 use Tests\Messages\MultiDependencyMessage;
+use Tests\Messages\SimpleMessage;
 use Tests\TestCase;
 
 class SmsNotificationTest extends TestCase
 {
+    use RefreshDatabase;
+
     /** @test */
     public function it_can_send_sms_through_user()
     {
@@ -201,5 +206,16 @@ class SmsNotificationTest extends TestCase
             "Hi {$user->name}, you have a new comment on your \"{$article->title}\" article. Read it here: {$article->link}",
             $sms->message
         );
+    }
+
+    /** @test */
+    public function it_can_send_sms_as_on_demand_notification()
+    {
+        config()->set('front-sms.fakeMessages', true);
+
+        Notification::route(SmsChannel::class, '+4799887766')->notifyNow(new SimpleMessage);
+
+        $message = FrontMessage::orderBy('id', 'desc')->first();
+        $this->assertEquals('+4799887766', $message->to);
     }
 }

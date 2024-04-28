@@ -10,5 +10,7 @@ class SimpleMessage extends SmsNotification
     {
         $this->message = $message ?? 'This is a SMS message';
         $this->price = 0;
+
+        parent::__construct($this->message);
     }
 }
