@@ -2,6 +2,4 @@
 
 namespace RolfHaug\FrontSms\Exceptions\Front;
 
-class InvalidApiRequest extends \Exception
-{
-}
+class InvalidApiRequest extends \Exception {}

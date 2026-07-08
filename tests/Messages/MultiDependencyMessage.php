@@ -14,7 +14,7 @@ class MultiDependencyMessage extends SmsNotification
      */
     private $article;
 
-    public function __construct($message = null, Article $article)
+    public function __construct($message, Article $article)
     {
         $this->article = $article;
         if ($message) {
@@ -28,7 +28,7 @@ class MultiDependencyMessage extends SmsNotification
         return vsprintf($this->message, [
             $notifiable->name,
             $this->article->title,
-            $this->article->link
+            $this->article->link,
         ]);
     }
 }

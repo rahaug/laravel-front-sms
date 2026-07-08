@@ -4,7 +4,10 @@ namespace RolfHaug\FrontSms;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\RequestOptions;
+use Illuminate\Config\Repository;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\Facades\Log;
+use Psr\Http\Message\ResponseInterface;
 use RolfHaug\FrontSms\Exceptions\Front\InvalidApiRequest;
 
 class FrontClient
@@ -21,7 +24,7 @@ class FrontClient
     private $client;
 
     /**
-     * @var \Illuminate\Config\Repository|\Illuminate\Contracts\Foundation\Application|mixed
+     * @var Repository|Application|mixed
      */
     public function __construct(Client $client)
     {
@@ -34,8 +37,8 @@ class FrontClient
     /**
      * Send message to Front API.
      *
-     * @param FrontMessage $message
      * @return object API response
+     *
      * @throws InvalidApiRequest
      */
     public function push(FrontMessage $message)
@@ -59,7 +62,6 @@ class FrontClient
     /**
      * Map message data to payload fields.
      *
-     * @param FrontMessage $message
      * @return array
      */
     private function mapPayload(FrontMessage $message)
@@ -71,8 +73,8 @@ class FrontClient
                 'phoneno' => $message->to,
                 'txt' => $message->message,
                 'price' => $message->price,
-                'unicode' => $message->isUnicode()
-            ]
+                'unicode' => $message->isUnicode(),
+            ],
         ];
 
         if ($password = config('front-sms.password')) {
@@ -85,10 +87,9 @@ class FrontClient
     /**
      * Parse API response.
      *
-     * @param \Psr\Http\Message\ResponseInterface $response
      * @return mixed
      */
-    private function parseResponse(\Psr\Http\Message\ResponseInterface $response)
+    private function parseResponse(ResponseInterface $response)
     {
         return json_decode($response->getBody());
     }
@@ -96,7 +97,7 @@ class FrontClient
     /**
      * Pretend sending message, outputs message in Laravel log.
      *
-     * @param FrontMessage $message
+     * @param  FrontMessage  $message
      * @return object API response
      */
     private function _pretendPush($message)
@@ -107,14 +108,14 @@ class FrontClient
             'phoneno' => $message->to,
             'txt' => $message->message,
             'price' => $message->price,
-            'unicode' => $message->isUnicode()
+            'unicode' => $message->isUnicode(),
         ]);
 
         // Fake response
         return json_encode([
             'id' => 'PRETEND_ID',
             'errorcode' => 0,
-            'description' => 'OK'
+            'description' => 'OK',
         ]);
     }
 }

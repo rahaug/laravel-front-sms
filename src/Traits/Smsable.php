@@ -2,6 +2,7 @@
 
 namespace RolfHaug\FrontSms\Traits;
 
+use libphonenumber\NumberParseException;
 use libphonenumber\PhoneNumberFormat;
 use libphonenumber\PhoneNumberUtil;
 
@@ -21,7 +22,8 @@ trait Smsable
      * Get phone number formatted as E164 format.
      *
      * @return string
-     * @throws \libphonenumber\NumberParseException
+     *
+     * @throws NumberParseException
      */
     public function getFormattedPhone()
     {
@@ -31,6 +33,6 @@ trait Smsable
 
         $phone = $phoneUtil->parse($this->$key, strtoupper($this->getCountryCode()));
 
-        return  $phoneUtil->format($phone, PhoneNumberFormat::E164);
+        return $phoneUtil->format($phone, PhoneNumberFormat::E164);
     }
 }

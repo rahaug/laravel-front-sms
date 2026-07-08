@@ -3,7 +3,6 @@
 namespace RolfHaug\FrontSms;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class FrontInboundMessage extends Model
@@ -24,7 +23,7 @@ class FrontInboundMessage extends Model
 
         $request = (object) $request;
         $files = null;
-        if(isset($request->files) && ! empty($request->files)) {
+        if (isset($request->files) && ! empty($request->files)) {
             $files = $request->files;
         }
 
@@ -36,7 +35,7 @@ class FrontInboundMessage extends Model
             'message' => $request->text,
             'counter' => $request->counter,
             'sent_at' => Carbon::parse($request->sent),
-            'files' => $files ?: null
+            'files' => $files ?: null,
         ]);
     }
 }

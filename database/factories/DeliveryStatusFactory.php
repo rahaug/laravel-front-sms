@@ -7,7 +7,6 @@ use RolfHaug\FrontSms\DeliveryStatus;
 
 class DeliveryStatusFactory extends Factory
 {
-
     protected $model = DeliveryStatus::class;
 
     /**
@@ -19,7 +18,7 @@ class DeliveryStatusFactory extends Factory
     {
         return [
             'origid' => fake()->randomNumber(4),
-            'status' => fake()->randomElement([DeliveryStatus::RECEIVED_BY_OPERATOR, DeliveryStatus::RECEIVED_BY_RECIPIENT, DeliveryStatus::DELIVERY_FAILED])
+            'status' => fake()->randomElement([DeliveryStatus::RECEIVED_BY_OPERATOR, DeliveryStatus::RECEIVED_BY_RECIPIENT, DeliveryStatus::DELIVERY_FAILED]),
         ];
     }
 }

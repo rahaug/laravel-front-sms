@@ -2,19 +2,16 @@
 
 namespace Tests;
 
-use Faker\Factory;
-use Illuminate\Support\Collection;
 use RolfHaug\FrontSms\FrontSmsServiceProvider;
 
 class TestCase extends \Orchestra\Testbench\TestCase
 {
-    public function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->loadLaravelMigrations(['--database' => 'testing']);
 
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
-
 
         // Add phone to auth model
         include_once __DIR__.'/../database/migrations/add_phone_column_to_user_table.php.stub';
@@ -26,7 +23,7 @@ class TestCase extends \Orchestra\Testbench\TestCase
     public function getPackageProviders($app)
     {
         return [
-            FrontSmsServiceProvider::class
+            FrontSmsServiceProvider::class,
         ];
     }
 
@@ -62,7 +59,7 @@ class TestCase extends \Orchestra\Testbench\TestCase
     /**
      * Create a new user.
      *
-     * @param array $overrides
+     * @param  array  $overrides
      * @return User
      */
     public function createUser($overrides = [])
@@ -72,12 +69,9 @@ class TestCase extends \Orchestra\Testbench\TestCase
             'email' => fake()->email,
             'phone' => fake()->phoneNumber,
             'password' => bcrypt('123456'),
-            'country_code' => fake()->countryCode
+            'country_code' => fake()->countryCode,
         ], $overrides));
     }
 
-    public function seed($class = 'DatabaseSeeder')
-    {
-
-    }
+    public function seed($class = 'DatabaseSeeder') {}
 }

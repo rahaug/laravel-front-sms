@@ -29,6 +29,7 @@ class DeliveryStatus extends Model
     /**
      * Related SMS Message
      * .
+     *
      * @return FrontMessage
      */
     public function message()
@@ -58,6 +59,7 @@ class DeliveryStatus extends Model
 
     /**
      * Helper method to determine if message was not delivered to the recipient.
+     *
      * @return bool
      */
     public function isFailed()

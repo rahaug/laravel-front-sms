@@ -4,20 +4,21 @@ namespace RolfHaug\FrontSms;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use RolfHaug\FrontSms\Database\Factories\FrontMessageFactory;
 
 class FrontMessage extends Model
 {
     use HasFactory;
+
     protected $guarded = [];
 
     protected $casts = [
         'received_by_operator' => 'boolean',
         'sent_at' => 'datetime',
         'delivered_at' => 'datetime',
-        'failed_at' => 'datetime'
+        'failed_at' => 'datetime',
     ];
-
 
     protected static function newFactory()
     {
@@ -27,7 +28,7 @@ class FrontMessage extends Model
     /**
      * Get related message statuses.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function statuses()
     {
@@ -77,14 +78,13 @@ class FrontMessage extends Model
     /**
      * Mark message as sent.
      *
-     * @param $origId
      * @return $this
      */
     public function markAsSent($origId)
     {
         $this->update([
             'origid' => $origId,
-            'sent_at' => now()
+            'sent_at' => now(),
         ]);
 
         return $this;
@@ -122,6 +122,7 @@ class FrontMessage extends Model
     public function markAsReceivedByOperator()
     {
         $this->update(['received_by_operator' => true]);
+
         return $this;
     }
 }

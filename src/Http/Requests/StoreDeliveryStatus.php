@@ -27,7 +27,7 @@ class StoreDeliveryStatus extends FormRequest
     {
         return [
             'origid' => 'required|exists:front_messages,origid',
-            'status' => 'required'
+            'status' => 'required',
         ];
     }
 

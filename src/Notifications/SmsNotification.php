@@ -23,18 +23,19 @@ class SmsNotification extends Notification implements ShouldQueue, Smsable
 
     /**
      * The phone number or sender name the message should be sent from.
+     *
      * @var string
      */
     public $from;
 
     /**
      * The recipient of the message.
-     * @var
      */
     public $to;
 
     /**
      * The message content.
+     *
      * @var string
      */
     public $message;
@@ -58,7 +59,7 @@ class SmsNotification extends Notification implements ShouldQueue, Smsable
     /**
      * Create a new message instance.
      *
-     * @param string $message
+     * @param  string  $message
      */
     public function __construct($message = null)
     {
@@ -84,7 +85,6 @@ class SmsNotification extends Notification implements ShouldQueue, Smsable
     /**
      * Save the entire notification in the database.
      *
-     * @param $notifiable
      * @return FrontMessage
      */
     public function toSms($notifiable)
@@ -105,14 +105,14 @@ class SmsNotification extends Notification implements ShouldQueue, Smsable
             'to' => $this->to,
             'from' => $this->from,
             'message' => $this->getMessage($notifiable),
-            'price' => $this->price
+            'price' => $this->price,
         ];
 
         $validator = Validator::make($data, [
             'to' => 'required|numeric',
             'from' => 'required',
             'message' => 'required',
-            'price' => 'required|numeric'
+            'price' => 'required|numeric',
         ]);
 
         if ($validator->fails()) {
@@ -127,7 +127,6 @@ class SmsNotification extends Notification implements ShouldQueue, Smsable
     /**
      * Set the phone number or sender name the message should be sent from.
      *
-     * @param $from
      * @return $this
      */
     public function from($from)
@@ -139,8 +138,8 @@ class SmsNotification extends Notification implements ShouldQueue, Smsable
 
     /**
      * Set the message content.
-     * @param $message
-     * @param array $data
+     *
+     * @param  array  $data
      * @return $this
      */
     public function message($message)
@@ -155,7 +154,6 @@ class SmsNotification extends Notification implements ShouldQueue, Smsable
      *
      * Must be enabled by Front first.
      *
-     * @param int $price
      * @return $this
      */
     public function price(int $price)
@@ -168,8 +166,9 @@ class SmsNotification extends Notification implements ShouldQueue, Smsable
     /**
      * Set recipient of the message.
      *
-     * @param $to Notifiable|SmsableTrait
+     * @param  $to  Notifiable|SmsableTrait
      * @return $this
+     *
      * @throws NumberParseException
      */
     public function to($to)
@@ -178,9 +177,9 @@ class SmsNotification extends Notification implements ShouldQueue, Smsable
 
         $notifiable = null;
 
-        if($to instanceof AnonymousNotifiable) {
+        if ($to instanceof AnonymousNotifiable) {
             $to = $to->routes[SmsChannel::class];
-        }elseif(is_object($to)) {
+        } elseif (is_object($to)) {
             $key = config('front-sms.notifiablePhoneKey');
             $notifiable = $to;
             $to = $notifiable->$key;

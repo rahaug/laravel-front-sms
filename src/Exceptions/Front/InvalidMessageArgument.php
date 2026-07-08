@@ -2,6 +2,4 @@
 
 namespace RolfHaug\FrontSms\Exceptions\Front;
 
-class InvalidMessageArgument extends \Exception
-{
-}
+class InvalidMessageArgument extends \Exception {}

@@ -16,11 +16,11 @@ class FrontSmsServiceProvider extends ServiceProvider
 
         if ($this->app->runningInConsole()) {
             $this->commands([
-                MakeSmsCommand::class
+                MakeSmsCommand::class,
             ]);
 
             $this->publishes([
-                __DIR__.'/../config/front-sms.php' => config_path('front-sms.php')
+                __DIR__.'/../config/front-sms.php' => config_path('front-sms.php'),
             ], 'config');
 
             $this->publishes([
@@ -42,8 +42,8 @@ class FrontSmsServiceProvider extends ServiceProvider
             return new Client([
                 'headers' => [
                     'Content-Type' => 'application/json',
-                    'Accept' => 'application/json'
-                ]
+                    'Accept' => 'application/json',
+                ],
             ]);
         });
     }

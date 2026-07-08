@@ -12,7 +12,7 @@ class DynamicMessage extends SmsNotification
     {
         return vsprintf($this->message, [
             $notifiable->name,
-            $notifiable->email
+            $notifiable->email,
         ]);
     }
 }
