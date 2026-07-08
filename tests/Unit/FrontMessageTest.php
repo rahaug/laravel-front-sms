@@ -3,13 +3,14 @@
 namespace Tests\Unit;
 
 use Illuminate\Support\Collection;
+use PHPUnit\Framework\Attributes\Test;
 use RolfHaug\FrontSms\DeliveryStatus;
 use RolfHaug\FrontSms\FrontMessage;
 use Tests\TestCase;
 
 class FrontMessageTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function it_has_statuses_relationship()
     {
         $origId = 123;
@@ -25,7 +26,7 @@ class FrontMessageTest extends TestCase
         $this->assertCount(1, $sms->statuses);
     }
 
-    /** @test */
+    #[Test]
     public function it_has_is_delivered_helper_method()
     {
         $sms = FrontMessage::factory()->create();
@@ -33,13 +34,13 @@ class FrontMessageTest extends TestCase
         $this->assertFalse($sms->isDelivered());
 
         $sms->update([
-            'delivered_at' => now()->subDays(2)
+            'delivered_at' => now()->subDays(2),
         ]);
 
         $this->assertTrue($sms->fresh()->isDelivered());
     }
 
-    /** @test */
+    #[Test]
     public function it_has_an_is_unicode_helper_method()
     {
         $notUnicodeSms = FrontMessage::factory()->create(['message' => 'Not unicode']);
@@ -51,7 +52,7 @@ class FrontMessageTest extends TestCase
         $this->assertTrue($unicodeSms->isUnicode());
     }
 
-    /** @test */
+    #[Test]
     public function it_marks_lesson_as_sent_and_sets_orig_id()
     {
         $sms = FrontMessage::factory()->create();
@@ -64,7 +65,7 @@ class FrontMessageTest extends TestCase
         $this->assertEquals(1234, $sms->origid);
     }
 
-    /** @test */
+    #[Test]
     public function it_marks_lesson_as_delivered()
     {
         $sms = FrontMessage::factory()->create();
@@ -75,7 +76,7 @@ class FrontMessageTest extends TestCase
         $this->assertTrue($sms->fresh()->isDelivered());
     }
 
-    /** @test */
+    #[Test]
     public function it_has_is_failed_helper()
     {
         $sms = FrontMessage::factory()->create();
@@ -85,7 +86,7 @@ class FrontMessageTest extends TestCase
         $this->assertTrue($sms->fresh()->isFailed());
     }
 
-    /** @test */
+    #[Test]
     public function it_marks_lesson_as_failed()
     {
         $sms = FrontMessage::factory()->create();
@@ -95,8 +96,8 @@ class FrontMessageTest extends TestCase
         $this->assertTrue($sms->fresh()->isFailed());
     }
 
-    /** @test */
-    public function it_has_a_isReceivedByOperator_method()
+    #[Test]
+    public function it_has_a_is_received_by_operator_method()
     {
         /** @var FrontMessage $sms */
         $sms = FrontMessage::factory()->create();
@@ -106,8 +107,8 @@ class FrontMessageTest extends TestCase
         $this->assertTrue($sms->fresh()->isReceivedByOperator());
     }
 
-    /** @test */
-    public function it_has_a_markAsReceivedByOperator_method()
+    #[Test]
+    public function it_has_a_mark_as_received_by_operator_method()
     {
         $sms = FrontMessage::factory()->create();
 

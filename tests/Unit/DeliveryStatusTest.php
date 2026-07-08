@@ -2,31 +2,32 @@
 
 namespace Tests\Unit;
 
+use PHPUnit\Framework\Attributes\Test;
 use RolfHaug\FrontSms\DeliveryStatus;
 use RolfHaug\FrontSms\FrontMessage;
 use Tests\TestCase;
 
 class DeliveryStatusTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function it_has_received_by_operator_status()
     {
         $this->assertEquals(0, DeliveryStatus::RECEIVED_BY_OPERATOR);
     }
 
-    /** @test */
+    #[Test]
     public function it_has_received_by_receipient_status()
     {
         $this->assertEquals(4, DeliveryStatus::RECEIVED_BY_RECIPIENT);
     }
 
-    /** @test */
+    #[Test]
     public function it_has_delivery_failed_status()
     {
         $this->assertEquals(5, DeliveryStatus::DELIVERY_FAILED);
     }
 
-    /** @test */
+    #[Test]
     public function it_has_sms_relationship()
     {
         $status = DeliveryStatus::factory()->create();
@@ -38,31 +39,31 @@ class DeliveryStatusTest extends TestCase
         $this->assertEquals($sms->id, $status->message->id);
     }
 
-    /** @test */
+    #[Test]
     public function it_has_is_delivered_helper_method()
     {
         $status = DeliveryStatus::factory()->create([
-            'status' => DeliveryStatus::RECEIVED_BY_RECIPIENT
+            'status' => DeliveryStatus::RECEIVED_BY_RECIPIENT,
         ]);
 
         $this->assertTrue($status->isDelivered());
     }
 
-    /** @test */
+    #[Test]
     public function it_has_is_received_by_operator_helper_method()
     {
         $status = DeliveryStatus::factory()->create([
-            'status' => DeliveryStatus::RECEIVED_BY_OPERATOR
+            'status' => DeliveryStatus::RECEIVED_BY_OPERATOR,
         ]);
 
         $this->assertTrue($status->isReceivedByOperator());
     }
 
-    /** @test */
+    #[Test]
     public function it_has_is_failed_helper_method()
     {
         $status = DeliveryStatus::factory()->create([
-            'status' => DeliveryStatus::DELIVERY_FAILED
+            'status' => DeliveryStatus::DELIVERY_FAILED,
         ]);
 
         $this->assertTrue($status->isFailed());

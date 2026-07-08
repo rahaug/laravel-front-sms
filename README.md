@@ -1,5 +1,5 @@
 # Laravel Front SMS
-Send SMS to your users with Laravel and [Front SMS Gateway API](https://fro.no/sms/sms-gateway?utm_source=Rolf%20Haug%20Laravel%20Package&utm_medium=link&utm_campaign=Package%20Description) through the traditional [notification interface](https://laravel.com/docs/10.x/notifications) of Laravel. 
+Send SMS to your users with Laravel and [Front SMS Gateway API](https://fro.no/sms/sms-gateway?utm_source=Rolf%20Haug%20Laravel%20Package&utm_medium=link&utm_campaign=Package%20Description) through the traditional [notification interface](https://laravel.com/docs/notifications) of Laravel. 
 
  The package support outbound and inbound SMS, as well as and incoming delivery reports.
 
@@ -297,9 +297,9 @@ Route::post('custom/path/to/sms/report', [\RolfHaug\FrontSms\Http\Controllers\In
 
 ## Testing
 
-The package use the Laravel Notification Interface, so you can test the notifications with [Notification Fake](https://laravel.com/docs/10.x/mocking#notification-fake).
+The package use the Laravel Notification Interface, so you can test the notifications with [Notification Fake](https://laravel.com/docs/mocking#notification-fake).
 
-There are many ways to test [on-demand notifications](https://laravel.com/docs/10.x/notifications#on-demand-notifications), one way to do it like this:
+There are many ways to test [on-demand notifications](https://laravel.com/docs/notifications#on-demand-notifications), one way to do it like this:
 
 ```
 use RolfHaug\FrontSms\Channels\SmsChannel;

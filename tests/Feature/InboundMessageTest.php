@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use RolfHaug\FrontSms\FrontInboundMessage;
 use Tests\TestCase;
 
@@ -10,14 +11,14 @@ class InboundMessageTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function it_validates_payload()
     {
         $response = $this->postJson(route('sms.inbound.store'), []);
         $this->assertEquals(422, $response->status());
     }
 
-    /** @test */
+    #[Test]
     public function it_can_store_inbound_message()
     {
         $request = $this->postJson(route('sms.inbound.store'), [

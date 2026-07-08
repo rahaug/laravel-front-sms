@@ -2,20 +2,22 @@
 
 namespace Tests\Unit;
 
+use DummyNamespace\DummyClass;
+use PHPUnit\Framework\Attributes\Test;
 use RolfHaug\FrontSms\Notifications\SmsNotification;
 use Tests\TestCase;
 use Tests\User;
 
 class DummyMessageTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function it_extends_sms_notification_class()
     {
         $stub = $this->getStubClass();
         $this->assertTrue(is_subclass_of($stub, SmsNotification::class));
     }
 
-    /** @test */
+    #[Test]
     public function it_has_a_default_message_with_an_argument()
     {
         $stub = $this->getStubClass();
@@ -23,7 +25,7 @@ class DummyMessageTest extends TestCase
         $this->assertStringContainsString('%s', $stub->message);
     }
 
-    /** @test */
+    #[Test]
     public function it_has_a_default_get_message_method_that_compiles_the_dynamic_argument()
     {
         $stub = $this->getStubClass();
@@ -38,6 +40,6 @@ class DummyMessageTest extends TestCase
     {
         require_once __DIR__.'/../../stubs/DummyClass.php';
 
-        return new \DummyNamespace\DummyClass;
+        return new DummyClass;
     }
 }

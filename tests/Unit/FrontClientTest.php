@@ -10,7 +10,7 @@ use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\Uri;
 use Illuminate\Support\Facades\Log;
-use Mockery;
+use PHPUnit\Framework\Attributes\Test;
 use RolfHaug\FrontSms\Exceptions\Front\InvalidApiRequest;
 use RolfHaug\FrontSms\FrontClient;
 use RolfHaug\FrontSms\FrontMessage;
@@ -18,7 +18,7 @@ use Tests\TestCase;
 
 class FrontClientTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function it_sends_sms_to_correct_url_with_correct_payload_and_updates_the_message_orig_id()
     {
         $sms = FrontMessage::factory()->create(['price' => 100]);
@@ -72,7 +72,7 @@ class FrontClientTest extends TestCase
         $this->assertEquals($origId, $sms->fresh()->origid);
     }
 
-    /** @test */
+    #[Test]
     public function it_includes_password_in_api_request_when_given()
     {
         $this->app['config']->set('front-sms.password', 'secret');
@@ -92,7 +92,7 @@ class FrontClientTest extends TestCase
         $this->assertObjectHasProperty('password', $payload, 'API Request is missing required data');
     }
 
-    /** @test */
+    #[Test]
     public function it_throws_invalid_api_request_exception_if_error_code_is_greater_than_0()
     {
         $this->expectException(InvalidApiRequest::class);
@@ -103,7 +103,7 @@ class FrontClientTest extends TestCase
         $this->pushMessageAndReturnMiddleware($sms, ['errorcode' => 1, 'id' => 0, 'description' => 'Something happened']);
     }
 
-    /** @test */
+    #[Test]
     public function it_defaults_to_not_using_unicode()
     {
         $sms = FrontMessage::factory()->create(['message' => 'Not a unicode message']);
@@ -114,8 +114,8 @@ class FrontClientTest extends TestCase
         $this->assertEquals(false, $payload->unicode, 'Unicode field was not set properly');
     }
 
-/** @test */
-public function it_sets_unicode_field_to_true_if_message_is_unicode()
+    #[Test]
+    public function it_sets_unicode_field_to_true_if_message_is_unicode()
     {
         $sms = FrontMessage::factory()->create(['message' => 'Unicode Message 💪']);
         $this->assertTrue($sms->isUnicode());
@@ -126,14 +126,13 @@ public function it_sets_unicode_field_to_true_if_message_is_unicode()
         $this->assertEquals(true, $payload->unicode, 'Unicode field was not set properly');
     }
 
-    /** @test */
+    #[Test]
     public function it_writes_message_to_log_if_fake_message_is_enabled()
     {
         $this->app['config']->set('front-sms.fakeMessages', true);
         $this->assertTrue(config('front-sms.fakeMessages'));
 
         $sms = FrontMessage::factory()->create();
-
 
         Log::shouldReceive('info')
             ->once()
@@ -156,10 +155,10 @@ public function it_sets_unicode_field_to_true_if_message_is_unicode()
                 return true;
             });
 
-        (new FrontClient(new Client()))->push($sms);
+        (new FrontClient(new Client))->push($sms);
     }
 
-    /** @test */
+    #[Test]
     public function it_has_fake_messages_config_set_to_false_as_default()
     {
         $this->assertFalse(config('front-sms.fakeMessages'));
@@ -172,7 +171,7 @@ public function it_sets_unicode_field_to_true_if_message_is_unicode()
         }
 
         $mock = new MockHandler([
-            new Response(200, [], json_encode($response))
+            new Response(200, [], json_encode($response)),
         ]);
 
         $container = [];

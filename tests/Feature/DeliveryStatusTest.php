@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Response;
+use PHPUnit\Framework\Attributes\Test;
 use RolfHaug\FrontSms\DeliveryStatus;
 use RolfHaug\FrontSms\FrontMessage;
 use Tests\TestCase;
@@ -12,14 +13,14 @@ class DeliveryStatusTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function it_can_store_status_message()
     {
         $message = FrontMessage::factory()->create(['origid' => 1234]);
 
         $request = $this->post(route('sms.report.store'), [
             'origid' => $message->origid,
-            'status' => -1
+            'status' => -1,
         ]);
         $request->assertOk();
         $status = DeliveryStatus::first();
@@ -29,51 +30,51 @@ class DeliveryStatusTest extends TestCase
         $this->assertEquals($status->status, -1);
     }
 
-    /** @test */
+    #[Test]
     public function it_does_not_store_status_message_if_origid_does_not_exists()
     {
         $request = $this->post(route('sms.report.store'), [
             'origid' => 111,
-            'status' => -1
+            'status' => -1,
         ]);
 
         $request->assertStatus(Response::HTTP_NOT_FOUND);
     }
 
-    /** @test */
+    #[Test]
     public function it_marks_message_as_received_by_operator()
     {
         $message = FrontMessage::factory()->create(['origid' => 1234]);
 
         $this->post(route('sms.report.store'), [
             'origid' => $message->origid,
-            'status' => DeliveryStatus::RECEIVED_BY_OPERATOR
+            'status' => DeliveryStatus::RECEIVED_BY_OPERATOR,
         ]);
 
         $this->assertTrue($message->fresh()->isReceivedByOperator());
     }
 
-    /** @test */
+    #[Test]
     public function it_marks_message_as_delivered()
     {
         $message = FrontMessage::factory()->create(['origid' => 1234]);
 
         $this->post(route('sms.report.store'), [
             'origid' => $message->origid,
-            'status' => DeliveryStatus::RECEIVED_BY_RECIPIENT
+            'status' => DeliveryStatus::RECEIVED_BY_RECIPIENT,
         ]);
 
         $this->assertTrue($message->fresh()->isDelivered());
     }
 
-    /** @test */
+    #[Test]
     public function it_marks_message_as_failed()
     {
         $message = FrontMessage::factory()->create(['origid' => 1234]);
 
         $this->post(route('sms.report.store'), [
             'origid' => $message->origid,
-            'status' => DeliveryStatus::DELIVERY_FAILED
+            'status' => DeliveryStatus::DELIVERY_FAILED,
         ]);
 
         $this->assertTrue($message->fresh()->isFailed());

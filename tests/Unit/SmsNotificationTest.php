@@ -5,6 +5,7 @@ namespace Tests\Unit;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
 use libphonenumber\NumberParseException;
+use PHPUnit\Framework\Attributes\Test;
 use RolfHaug\FrontSms\Channels\SmsChannel;
 use RolfHaug\FrontSms\FrontMessage;
 use RolfHaug\FrontSms\Notifications\SmsNotification;
@@ -18,7 +19,7 @@ class SmsNotificationTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function it_can_send_sms_through_user()
     {
         Notification::fake();
@@ -28,13 +29,14 @@ class SmsNotificationTest extends TestCase
 
         Notification::assertSentTo($user, SmsNotification::class, function (SmsNotification $notification) use ($user) {
             $sms = $notification->toSms($user);
+
             return $sms->message === 'This is a test message'
                 && $sms->user_id === $user->id
                 && $sms->to === $user->getFormattedPhone();
         });
     }
 
-    /** @test */
+    #[Test]
     public function it_sets_default_settings()
     {
         $this->app->config->set(
@@ -54,7 +56,7 @@ class SmsNotificationTest extends TestCase
         $this->assertEquals($user->id, $sms->user_id);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_set_message_through_method()
     {
         $user = $this->createUser();
@@ -65,7 +67,7 @@ class SmsNotificationTest extends TestCase
         $this->assertEquals('Custom message', $sms->message);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_set_from_field_through_message()
     {
         $user = $this->createUser();
@@ -76,7 +78,7 @@ class SmsNotificationTest extends TestCase
         $this->assertEquals('Batman', $sms->from);
     }
 
-    /** @test */
+    #[Test]
     public function it_automatically_sets_to_field_when_given_user()
     {
         $user = $this->createUser();
@@ -87,7 +89,7 @@ class SmsNotificationTest extends TestCase
         $this->assertEquals($user->getFormattedPhone(), $sms->to);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_set_to_field_through_method()
     {
         $user = $this->createUser();
@@ -98,14 +100,14 @@ class SmsNotificationTest extends TestCase
         $this->assertEquals('+4799887766', $sms->to);
     }
 
-    /** @test */
+    #[Test]
     public function it_throws_if_setting_to_field_through_method_and_it_does_not_have_country_code()
     {
         $this->expectException(NumberParseException::class);
         (new SmsNotification('Test message'))->to('99887766');
     }
 
-    /** @test */
+    #[Test]
     public function it_gets_country_code_from_user_when_using_smsable_trait()
     {
         $user = $this->createUser(['country_code' => 'NO', 'phone' => 90012345]);
@@ -116,7 +118,7 @@ class SmsNotificationTest extends TestCase
         $this->assertEquals('+4790012345', $sms->to);
     }
 
-    /** @test */
+    #[Test]
     public function it_gets_country_code_from_config_when_no_user_or_country_code_is_given()
     {
         $this->app['config']->set('front-sms.defaultRegion', 'NO');
@@ -125,8 +127,8 @@ class SmsNotificationTest extends TestCase
         $this->assertEquals('+4790012345', $notification->to);
     }
 
-    /** @test */
-    public function it_gets_country_code_from_E164_formatted_phone()
+    #[Test]
+    public function it_gets_country_code_from_e164_formatted_phone()
     {
         $this->app['config']->set('front-sms.defaultRegion', null);
 
@@ -138,7 +140,7 @@ class SmsNotificationTest extends TestCase
         $this->assertEquals('+4790012345', $sms->to);
     }
 
-    /** @test */
+    #[Test]
     public function it_throws_exception_if_trying_to_get_country_code_from_number_and_it_misses_the_plus_sign()
     {
         $this->expectException(NumberParseException::class);
@@ -150,7 +152,7 @@ class SmsNotificationTest extends TestCase
         $sms = $notification->toSms($user);
     }
 
-    /** @test */
+    #[Test]
     public function it_sets_to_field_from_user_through_method()
     {
         $user = $this->createUser();
@@ -161,7 +163,7 @@ class SmsNotificationTest extends TestCase
         $this->assertEquals($user->getFormattedPhone(), $sms->to);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_set_price_through_method()
     {
         $user = $this->createUser();
@@ -172,7 +174,7 @@ class SmsNotificationTest extends TestCase
         $this->assertEquals(1000, $sms->price);
     }
 
-    /** @test */
+    #[Test]
     public function it_compiles_messages_before_sending()
     {
         $user = $this->createUser(['name' => 'Bruce Wayne']);
@@ -183,7 +185,7 @@ class SmsNotificationTest extends TestCase
         $this->assertEquals('Welcome Bruce Wayne!', $sms->message);
     }
 
-    /** @test */
+    #[Test]
     public function it_stores_eloquent_model_of_message_as_property()
     {
         $user = $this->createUser(['name' => 'Bruce Wayne']);
@@ -193,7 +195,7 @@ class SmsNotificationTest extends TestCase
         $this->assertInstanceOf(FrontMessage::class, $sms);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_send_messages_with_multiple_dependencies()
     {
         $user = $this->createUser();
@@ -208,7 +210,7 @@ class SmsNotificationTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_can_send_sms_as_on_demand_notification()
     {
         config()->set('front-sms.fakeMessages', true);

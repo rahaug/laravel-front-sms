@@ -12,11 +12,10 @@ class SmsChannel
 
     /**
      * Eloquent model of the message.
-     * @var
      */
     private $message;
 
-    public function __construct(FrontClient $client = null)
+    public function __construct(FrontClient $client)
     {
         $this->client = $client;
     }

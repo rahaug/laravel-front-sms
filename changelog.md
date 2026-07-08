@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.0.0] - 2026-07-08
+- Feat: support Laravel 11, 12 and 13
+- Fix: `SmsChannel` could no longer resolve `FrontClient` on Laravel 12+, where the container respects nullable constructor defaults
+- Breaking: requires PHP >= 8.2 and Laravel >= 11 (Laravel 10 users should stay on v0.5)
+- First stable major release; the package has been production-stable throughout 0.x
+- Chore: convert test suite to PHPUnit `#[Test]` attributes (required for PHPUnit 12)
+- Chore: adopt Laravel Pint, remove leftover php-cs-fixer config
+
 ## [0.5.0] - 2024-04-28
 - Feat: support [on-demand notifications](https://laravel.com/docs/10.x/notifications#on-demand-notifications)
 - Docs: improve docs about testing on-demand notifications

@@ -4,20 +4,21 @@ namespace Tests\Unit;
 
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Support\Facades\Artisan;
+use PHPUnit\Framework\Attributes\Test;
 use RolfHaug\FrontSms\Console\Commands\MakeSmsCommand;
 use RolfHaug\FrontSms\Notifications\SmsNotification;
 use Tests\TestCase;
 
 class MakeSmsCommandTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function it_registers_the_command()
     {
         $output = Artisan::all();
         $this->assertArrayHasKey('make:sms', $output, 'Command make:sms is not registered');
     }
 
-    /** @test */
+    #[Test]
     public function it_extends_generator_command()
     {
         /** @var MakeSmsCommand $command */
@@ -25,7 +26,7 @@ class MakeSmsCommandTest extends TestCase
         $this->assertTrue(is_subclass_of($command, GeneratorCommand::class));
     }
 
-    /** @test */
+    #[Test]
     public function it_generates_file_under_notifications_sms_namespace()
     {
         $notificationClassName = 'WelcomeMessage';
